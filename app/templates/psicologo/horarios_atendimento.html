@@ -82,7 +82,16 @@
                                                 <select class="form-select" id="{{ dia_key }}_inicio_manha" name="{{ dia_key }}_inicio_manha">
                                                     <option value="">Selecione...</option>
                                                     {% for hora in range(24) %}
-                                                        <option value="{{ '%02d:00'|format(hora) }}">{{ '%02d:00'|format(hora) }}</option>
+                                                        {% set hora_str = '%02d:00'|format(hora) %}
+                                                        {% set selected = false %}
+                                                        {% if horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                            {% for h in horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                                {% if h.hora_inicio.strftime('%H:%M') == hora_str and loop.index0 == 0 %}
+                                                                    {% set selected = true %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -91,7 +100,16 @@
                                                 <select class="form-select" id="{{ dia_key }}_fim_manha" name="{{ dia_key }}_fim_manha">
                                                     <option value="">Selecione...</option>
                                                     {% for hora in range(24) %}
-                                                        <option value="{{ '%02d:00'|format(hora) }}">{{ '%02d:00'|format(hora) }}</option>
+                                                        {% set hora_str = '%02d:00'|format(hora) %}
+                                                        {% set selected = false %}
+                                                        {% if horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                            {% for h in horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                                {% if h.hora_fim.strftime('%H:%M') == hora_str and loop.index0 == 0 %}
+                                                                    {% set selected = true %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -109,7 +127,16 @@
                                                 <select class="form-select" id="{{ dia_key }}_inicio_tarde" name="{{ dia_key }}_inicio_tarde">
                                                     <option value="">Selecione...</option>
                                                     {% for hora in range(24) %}
-                                                        <option value="{{ '%02d:00'|format(hora) }}">{{ '%02d:00'|format(hora) }}</option>
+                                                        {% set hora_str = '%02d:00'|format(hora) %}
+                                                        {% set selected = false %}
+                                                        {% if horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                            {% for h in horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                                {% if h.hora_inicio.strftime('%H:%M') == hora_str and loop.index0 == 1 %}
+                                                                    {% set selected = true %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
@@ -118,7 +145,16 @@
                                                 <select class="form-select" id="{{ dia_key }}_fim_tarde" name="{{ dia_key }}_fim_tarde">
                                                     <option value="">Selecione...</option>
                                                     {% for hora in range(24) %}
-                                                        <option value="{{ '%02d:00'|format(hora) }}">{{ '%02d:00'|format(hora) }}</option>
+                                                        {% set hora_str = '%02d:00'|format(hora) %}
+                                                        {% set selected = false %}
+                                                        {% if horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                            {% for h in horarios_por_dia.get(loop.parent.parent.parent.parent.loop.index0) %}
+                                                                {% if h.hora_fim.strftime('%H:%M') == hora_str and loop.index0 == 1 %}
+                                                                    {% set selected = true %}
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
                                                 </select>
                                             </div>
