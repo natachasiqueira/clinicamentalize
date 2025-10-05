@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Contato - Clínica Mentalize{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">Entre em Contato</h1>
+                <p class="lead text-muted">Envie sua mensagem e entraremos em contato o mais breve possível</p>
+            </div>
+
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
+                    <form id="contact-form">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="from_name" class="form-label">Nome Completo *</label>
+                                <input type="text" class="form-control" id="from_name" name="from_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="from_email" class="form-label">E-mail *</label>
+                                <input type="email" class="form-control" id="from_email" name="from_email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="phone" class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="subject" class="form-label">Assunto *</label>
+                                <select class="form-select" id="subject" name="subject" required>
+                                    <option value="">Selecione um assunto</option>
+                                    <option value="Agendamento">Agendamento de Consulta</option>
+                                    <option value="Informações">Informações sobre Serviços</option>
+                                    <option value="Suporte">Suporte Técnico</option>
+                                    <option value="Outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="message" class="form-label">Mensagem *</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required 
+                                placeholder="Descreva sua solicitação ou dúvida..."></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="send-btn">
+                                <i class="fas fa-paper-plane me-2"></i>
+                                <span id="btn-text">Enviar Mensagem</span>
+                                <span id="btn-loading" class="d-none">
+                                    <i class="fas fa-spinner fa-spin me-2"></i>Enviando...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Alert para feedback -->
+                    <div id="form-alert" class="alert d-none mt-3" role="alert"></div>
+                </div>
+            </div>
+
+            <!-- Informações de contato -->
+            <div class="row mt-5">
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="fas fa-envelope fa-2x text-primary mb-3"></i>
+                        <h5>E-mail</h5>
+                        <p class="text-muted">contato@clinicamentalize.com.br</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="fas fa-phone fa-2x text-primary mb-3"></i>
+                        <h5>Telefone</h5>
+                        <p class="text-muted">(11) 96331-3561</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center mb-4">
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+                        <h5>Endereço</h5>
+                        <p class="text-muted">R. Progresso, 735<br>Francisco Morato - SP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Inicializar EmailJS
+(function(){
+    {% if emailjs_public_key %}
+    emailjs.init('{{ emailjs_public_key }}');
+    {% else %}
+    console.warn('EmailJS Public Key não configurada. Configure as variáveis de ambiente.');
+    {% endif %}
+})();
+
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    const sendBtn = document.getElementById('send-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+    const formAlert = document.getElementById('form-alert');
+    
+    // Mostrar loading
+    btnText.classList.add('d-none');
+    btnLoading.classList.remove('d-none');
+    sendBtn.disabled = true;
+    formAlert.classList.add('d-none');
+    
+    // Parâmetros do template
+    const templateParams = {
+        from_name: document.getElementById('from_name').value,
+        from_email: document.getElementById('from_email').value,
+        phone: document.getElementById('phone').value || 'Não informado',
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value,
+        to_name: 'Clínica Mentalize'
+    };
+    
+    // Verificar se as configurações estão disponíveis
+    {% if emailjs_service_id and emailjs_template_id %}
+    emailjs.send('{{ emailjs_service_id }}', '{{ emailjs_template_id }}', templateParams)
+        .then(function(response) {
+            console.log('SUCCESS!', response.status, response.text);
+            
+            // Mostrar sucesso
+            formAlert.className = 'alert alert-success mt-3';
+            formAlert.innerHTML = '<i class="fas fa-check-circle me-2"></i>Mensagem enviada com sucesso! Entraremos em contato em breve.';
+            formAlert.classList.remove('d-none');
+            
+            // Limpar formulário
+            document.getElementById('contact-form').reset();
+            
+        }, function(error) {
+            console.log('FAILED...', error);
+            
+            // Mostrar erro
+            formAlert.className = 'alert alert-danger mt-3';
+            formAlert.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Erro ao enviar mensagem. Tente novamente ou entre em contato por telefone.';
+            formAlert.classList.remove('d-none');
+        })
+        .finally(function() {
+            // Restaurar botão
+            btnText.classList.remove('d-none');
+            btnLoading.classList.add('d-none');
+            sendBtn.disabled = false;
+        });
+    {% else %}
+    // Configurações não disponíveis - mostrar erro
+    console.error('EmailJS Service ID ou Template ID não configurados.');
+    formAlert.className = 'alert alert-warning mt-3';
+    formAlert.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Serviço de email não configurado. Entre em contato por telefone.';
+    formAlert.classList.remove('d-none');
+    
+    // Restaurar botão
+    btnText.classList.remove('d-none');
+    btnLoading.classList.add('d-none');
+    sendBtn.disabled = false;
+    {% endif %}
+});
+</script>
+
+<style>
+.contact-info {
+    padding: 20px;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.contact-info:hover {
+    transform: translateY(-5px);
+}
+
+.card {
+    border-radius: 15px;
+}
+
+.btn-lg {
+    padding: 12px 30px;
+    border-radius: 8px;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+</style>
+{% endblock %}
