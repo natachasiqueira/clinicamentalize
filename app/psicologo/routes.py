@@ -84,6 +84,7 @@ def perfil():
         try:
             # Atualizar dados do usuário
             nome_completo = request.form.get('nome_completo', '').strip()
+            email = request.form.get('email', '').strip()
             telefone = request.form.get('telefone', '').strip()
             nova_senha = request.form.get('nova_senha', '').strip()
             confirmar_senha = request.form.get('confirmar_senha', '').strip()
@@ -111,6 +112,7 @@ def perfil():
             
             # Atualizar dados do usuário
             current_user.nome_completo = nome_completo
+            current_user.email = email  # Adicionando atualização do e-mail
             current_user.telefone = telefone
             
             # Atualizar senha se fornecida
@@ -223,8 +225,13 @@ def horarios_atendimento():
     
     if request.method == 'POST':
         try:
-            # Remover horários existentes
-            HorarioAtendimento.query.filter_by(psicologo_id=psicologo.id).delete()
+            # Atualizar horários existentes em vez de remover todos
+            horarios_existentes = HorarioAtendimento.query.filter_by(psicologo_id=psicologo.id).all()
+            horarios_atuais = {(h.dia_semana, h.hora_inicio.strftime('%H:%M'), h.hora_fim.strftime('%H:%M')): h for h in horarios_existentes}
+            
+            # Desativar todos os horários existentes inicialmente
+            for horario in horarios_existentes:
+                horario.ativo = False
             
             # Dias da semana (0=segunda, 1=terça, ..., 6=domingo)
             dias_semana = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']
@@ -239,28 +246,44 @@ def horarios_atendimento():
                     fim_manha = request.form.get(f'{dia}_fim_manha')
                     
                     if inicio_manha and fim_manha:
-                        horario_manha = HorarioAtendimento(
-                            psicologo_id=psicologo.id,
-                            dia_semana=i,
-                            hora_inicio=time.fromisoformat(inicio_manha),
-                            hora_fim=time.fromisoformat(fim_manha),
-                            ativo=True
-                        )
-                        db.session.add(horario_manha)
+                        # Verificar se já existe este horário
+                        chave = (i, inicio_manha, fim_manha)
+                        if chave in horarios_atuais:
+                            # Atualizar horário existente
+                            horario_manha = horarios_atuais[chave]
+                            horario_manha.ativo = True
+                        else:
+                            # Criar novo horário
+                            horario_manha = HorarioAtendimento(
+                                psicologo_id=psicologo.id,
+                                dia_semana=i,
+                                hora_inicio=time.fromisoformat(inicio_manha),
+                                hora_fim=time.fromisoformat(fim_manha),
+                                ativo=True
+                            )
+                            db.session.add(horario_manha)
                     
                     # Horário da tarde
                     inicio_tarde = request.form.get(f'{dia}_inicio_tarde')
                     fim_tarde = request.form.get(f'{dia}_fim_tarde')
                     
                     if inicio_tarde and fim_tarde:
-                        horario_tarde = HorarioAtendimento(
-                            psicologo_id=psicologo.id,
-                            dia_semana=i,
-                            hora_inicio=time.fromisoformat(inicio_tarde),
-                            hora_fim=time.fromisoformat(fim_tarde),
-                            ativo=True
-                        )
-                        db.session.add(horario_tarde)
+                        # Verificar se já existe este horário
+                        chave = (i, inicio_tarde, fim_tarde)
+                        if chave in horarios_atuais:
+                            # Atualizar horário existente
+                            horario_tarde = horarios_atuais[chave]
+                            horario_tarde.ativo = True
+                        else:
+                            # Criar novo horário
+                            horario_tarde = HorarioAtendimento(
+                                psicologo_id=psicologo.id,
+                                dia_semana=i,
+                                hora_inicio=time.fromisoformat(inicio_tarde),
+                                hora_fim=time.fromisoformat(fim_tarde),
+                                ativo=True
+                            )
+                            db.session.add(horario_tarde)
             
             db.session.commit()
             flash('Horários de atendimento atualizados com sucesso!', 'success')

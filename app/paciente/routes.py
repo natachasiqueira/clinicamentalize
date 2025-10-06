@@ -313,14 +313,18 @@ def api_horarios_disponiveis():
         horarios_finais = [h for h in horarios_disponiveis if h not in horarios_ocupados]
         
         # Se a data for hoje, filtrar horários que já passaram ou estão a menos de 1 hora do atual
-        hoje = datetime.now().date()
+        # Usando o fuso horário de São Paulo (UTC-3)
+        from datetime import timezone, timedelta
+        fuso_sp = timezone(timedelta(hours=-3))
+        hoje = datetime.now(fuso_sp).date()
+        
         if data == hoje:
-            hora_atual = datetime.now()
+            hora_atual = datetime.now(fuso_sp)
             hora_limite = hora_atual + timedelta(hours=1)
             
             # Filtrar apenas horários que estão pelo menos 1 hora à frente do horário atual
             horarios_finais = [h for h in horarios_finais if 
-                              datetime.strptime(f"{data_str} {h}", '%Y-%m-%d %H:%M') >= hora_limite]
+                              datetime.strptime(f"{data_str} {h}", '%Y-%m-%d %H:%M').replace(tzinfo=fuso_sp) >= hora_limite]
         
         return jsonify({'horarios': horarios_finais})
         
