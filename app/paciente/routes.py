@@ -264,10 +264,11 @@ def api_horarios_disponiveis():
         dia_semana = data.weekday()  # 0=Segunda, 1=Terça, ..., 6=Domingo
         
         # Buscar TODOS os horários do dia (pode ter múltiplos turnos)
-        # Importante: Não filtrar por ativo=True para garantir que todos os horários sejam considerados
+        # Filtrar apenas horários ativos
         horarios_atendimento = HorarioAtendimento.query.filter_by(
             psicologo_id=psicologo_id,
-            dia_semana=dia_semana
+            dia_semana=dia_semana,
+            ativo=True
         ).all()
         
         if not horarios_atendimento:
@@ -277,10 +278,6 @@ def api_horarios_disponiveis():
         horarios_disponiveis = []
         
         for horario_atendimento in horarios_atendimento:
-            # Verificar se o horário está ativo
-            if not horario_atendimento.ativo:
-                continue
-                
             hora_atual = horario_atendimento.hora_inicio
             hora_fim = horario_atendimento.hora_fim
             

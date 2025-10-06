@@ -225,8 +225,8 @@ def horarios_atendimento():
     
     if request.method == 'POST':
         try:
-            # Remover todos os horários existentes para evitar duplicação
-            HorarioAtendimento.query.filter_by(psicologo_id=psicologo.id).delete()
+            # Primeiro, desativar todos os horários existentes
+            HorarioAtendimento.query.filter_by(psicologo_id=psicologo.id).update({'ativo': False})
             
             # Dias da semana (0=segunda, 1=terça, ..., 6=domingo)
             dias_semana = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']
@@ -241,30 +241,54 @@ def horarios_atendimento():
                     fim_manha = request.form.get(f'{dia}_fim_manha')
                     
                     if inicio_manha and fim_manha:
-                        # Criar novo horário
-                        horario_manha = HorarioAtendimento(
+                        # Verificar se já existe um horário de manhã para este dia
+                        horario_existente = HorarioAtendimento.query.filter_by(
                             psicologo_id=psicologo.id,
                             dia_semana=i,
                             hora_inicio=time.fromisoformat(inicio_manha),
-                            hora_fim=time.fromisoformat(fim_manha),
-                            ativo=True
-                        )
-                        db.session.add(horario_manha)
+                            hora_fim=time.fromisoformat(fim_manha)
+                        ).first()
+                        
+                        if horario_existente:
+                            # Reativar o horário existente
+                            horario_existente.ativo = True
+                        else:
+                            # Criar novo horário
+                            horario_manha = HorarioAtendimento(
+                                psicologo_id=psicologo.id,
+                                dia_semana=i,
+                                hora_inicio=time.fromisoformat(inicio_manha),
+                                hora_fim=time.fromisoformat(fim_manha),
+                                ativo=True
+                            )
+                            db.session.add(horario_manha)
                     
                     # Horário da tarde
                     inicio_tarde = request.form.get(f'{dia}_inicio_tarde')
                     fim_tarde = request.form.get(f'{dia}_fim_tarde')
                     
                     if inicio_tarde and fim_tarde:
-                        # Criar novo horário
-                        horario_tarde = HorarioAtendimento(
+                        # Verificar se já existe um horário de tarde para este dia
+                        horario_existente = HorarioAtendimento.query.filter_by(
                             psicologo_id=psicologo.id,
                             dia_semana=i,
                             hora_inicio=time.fromisoformat(inicio_tarde),
-                            hora_fim=time.fromisoformat(fim_tarde),
-                            ativo=True
-                        )
-                        db.session.add(horario_tarde)
+                            hora_fim=time.fromisoformat(fim_tarde)
+                        ).first()
+                        
+                        if horario_existente:
+                            # Reativar o horário existente
+                            horario_existente.ativo = True
+                        else:
+                            # Criar novo horário
+                            horario_tarde = HorarioAtendimento(
+                                psicologo_id=psicologo.id,
+                                dia_semana=i,
+                                hora_inicio=time.fromisoformat(inicio_tarde),
+                                hora_fim=time.fromisoformat(fim_tarde),
+                                ativo=True
+                            )
+                            db.session.add(horario_tarde)
             
             db.session.commit()
             flash('Horários de atendimento atualizados com sucesso!', 'success')
