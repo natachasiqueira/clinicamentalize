@@ -39,9 +39,36 @@ def perfil():
     if request.method == 'POST':
         try:
             # Atualizar dados pessoais
-            current_user.nome_completo = request.form.get('nome', '').strip()
-            current_user.email = request.form.get('email', '').strip()
-            current_user.telefone = request.form.get('telefone', '').strip()
+            nome_completo = request.form.get('nome', '').strip()
+            email = request.form.get('email', '').strip()
+            telefone = request.form.get('telefone', '').strip()
+            
+            # Validações
+            if not nome_completo:
+                flash('Nome completo é obrigatório.', 'error')
+                return redirect(url_for('paciente.perfil'))
+            
+            if not email:
+                flash('E-mail é obrigatório.', 'error')
+                return redirect(url_for('paciente.perfil'))
+            
+            # Verificar se o e-mail já existe para outro usuário
+            if email != current_user.email:
+                usuario_existente = db.session.query(db.exists().where(
+                    db.and_(
+                        current_user.__class__.email == email,
+                        current_user.__class__.id != current_user.id
+                    )
+                )).scalar()
+                
+                if usuario_existente:
+                    flash('Este e-mail já está sendo usado por outro usuário.', 'error')
+                    return redirect(url_for('paciente.perfil'))
+            
+            # Atualizar dados do usuário
+            current_user.nome_completo = nome_completo
+            current_user.email = email
+            current_user.telefone = telefone
             
             # Buscar o paciente relacionado (não é mais necessário para telefone)
             paciente = Paciente.query.filter_by(usuario_id=current_user.id).first()
@@ -264,11 +291,10 @@ def api_horarios_disponiveis():
         dia_semana = data.weekday()  # 0=Segunda, 1=Terça, ..., 6=Domingo
         
         # Buscar TODOS os horários do dia (pode ter múltiplos turnos)
-        # Filtrar apenas horários ativos
+        # Importante: Não filtrar por ativo=True para garantir que todos os horários sejam considerados
         horarios_atendimento = HorarioAtendimento.query.filter_by(
             psicologo_id=psicologo_id,
-            dia_semana=dia_semana,
-            ativo=True
+            dia_semana=dia_semana
         ).all()
         
         if not horarios_atendimento:
@@ -278,6 +304,10 @@ def api_horarios_disponiveis():
         horarios_disponiveis = []
         
         for horario_atendimento in horarios_atendimento:
+            # Verificar se o horário está ativo
+            if not horario_atendimento.ativo:
+                continue
+                
             hora_atual = horario_atendimento.hora_inicio
             hora_fim = horario_atendimento.hora_fim
             
@@ -310,18 +340,14 @@ def api_horarios_disponiveis():
         horarios_finais = [h for h in horarios_disponiveis if h not in horarios_ocupados]
         
         # Se a data for hoje, filtrar horários que já passaram ou estão a menos de 1 hora do atual
-        # Usando o fuso horário de São Paulo (UTC-3)
-        from datetime import timezone, timedelta
-        fuso_sp = timezone(timedelta(hours=-3))
-        hoje = datetime.now(fuso_sp).date()
-        
+        hoje = datetime.now().date()
         if data == hoje:
-            hora_atual = datetime.now(fuso_sp)
+            hora_atual = datetime.now()
             hora_limite = hora_atual + timedelta(hours=1)
             
             # Filtrar apenas horários que estão pelo menos 1 hora à frente do horário atual
             horarios_finais = [h for h in horarios_finais if 
-                              datetime.strptime(f"{data_str} {h}", '%Y-%m-%d %H:%M').replace(tzinfo=fuso_sp) >= hora_limite]
+                              datetime.strptime(f"{data_str} {h}", '%Y-%m-%d %H:%M') >= hora_limite]
         
         return jsonify({'horarios': horarios_finais})
         
