@@ -12,6 +12,17 @@ migrate = Migrate()
 
 def create_app(config_name='default'):
     """Factory function para criar a aplicação Flask"""
+    import os
+    import pytz
+    from datetime import datetime
+
+    # Define o fuso horário padrão da aplicação
+    os.environ['TZ'] = 'America/Sao_Paulo'
+    try:
+        import time
+        time.tzset()  # Unix/Linux
+    except AttributeError:
+        pass  # Windows
     app = Flask(__name__)
     
     # Configuração da aplicação
