@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Área do Paciente{% endblock %}
+{% block title %}Página Principal do Paciente{% endblock %}
 
 {% block content %}
 <div class="container-fluid mt-4">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1 class="h3 mb-0 text-gray-800">Página Principal do Paciente</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-display-medical"></i> Página Principal do Paciente</h1>
             <p class="text-muted mb-0">Bem-vindo, {{ current_user.nome_completo }}!</p>
+            </div>
         </div>
     </div>
 
@@ -131,7 +132,8 @@
                         <!-- Data -->
                         <div class="col-md-6 mb-3">
                             <label for="data" class="form-label">Data *</label>
-                            <input type="date" class="form-control" id="data" name="data" required placeholder="Selecione primeiro um psicólogo">
+                            <input type="date" class="form-control" id="data" name="data" required disabled>
+                                <option value="">Selecione primeiro um psicólogo</option>
                         </div>
                         
                         <!-- Horário -->
