@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from app.models import Usuario, Psicologo, Paciente, Agendamento, Admin, db
 from sqlalchemy import func, case, String, cast
 from functools import wraps
+from werkzeug.security import generate_password_hash
 
 def admin_required(f):
     """Decorator para verificar se o usuário é admin"""
@@ -209,14 +210,14 @@ def init_routes(admin):
     def cadastrar_psicologo():
         """Cadastrar novo psicólogo"""
         if request.method == 'POST':
-            nome = request.form.get('nome')
+            nome_completo = request.form.get('nome_completo')
             email = request.form.get('email')
             telefone = request.form.get('telefone')
             senha = request.form.get('senha')
             confirmar_senha = request.form.get('confirmar_senha')
             
             # Validações básicas
-            if not all([nome, email, telefone, senha, confirmar_senha]):
+            if not all([nome_completo, email, telefone, senha, confirmar_senha]):
                 flash('Todos os campos são obrigatórios!', 'error')
                 return render_template('admin/cadastrar_psicologo.html')
             
@@ -237,7 +238,7 @@ def init_routes(admin):
                 
                 # Criar novo usuário
                 novo_usuario = Usuario(
-                    nome_completo=nome,
+                    nome_completo=nome_completo,
                     email=email,
                     telefone=telefone,
                     tipo_usuario='psicologo'
@@ -258,7 +259,141 @@ def init_routes(admin):
                 
             except Exception as e:
                 db.session.rollback()
-                flash(f"Erro ao cadastrar psicólogo: {e}") # Adicionado para depuração
+                flash(f"Erro ao cadastrar psicólogo: {e}")
                 return render_template('admin/cadastrar_psicologo.html')
         
         return render_template('admin/cadastrar_psicologo.html')
+    
+    @admin.route('/perfil', methods=['GET', 'POST'])
+    @login_required
+    @admin_required
+    def perfil():
+        """Editar perfil do administrador"""
+        admin_user = current_user
+        
+        if request.method == 'POST':
+            try:
+                # Atualizar dados básicos
+                admin_user.nome_completo = request.form.get('nome_completo')
+                admin_user.email = request.form.get('email')
+                admin_user.telefone = request.form.get('telefone')
+                
+                # Verificar se foi solicitada mudança de senha
+                nova_senha = request.form.get('nova_senha')
+                confirmar_senha = request.form.get('confirmar_senha')
+                
+                if nova_senha:
+                    if nova_senha != confirmar_senha:
+                        flash('As senhas não coincidem.', 'error')
+                        return render_template('admin/perfil.html', admin=admin_user)
+                    
+                    if len(nova_senha) < 6:
+                        flash('A senha deve ter pelo menos 6 caracteres.', 'error')
+                        return render_template('admin/perfil.html', admin=admin_user)
+                    
+                    admin_user.senha_hash = generate_password_hash(nova_senha)
+                
+                db.session.commit()
+                flash('Perfil atualizado com sucesso!', 'success')
+                return redirect(url_for('admin.dashboard'))
+                
+            except Exception as e:
+                db.session.rollback()
+                flash(f'Erro ao atualizar perfil: {str(e)}', 'error')
+        
+        return render_template('admin/perfil.html', admin=admin_user)
+    
+    @admin.route('/listar-pacientes')
+    @login_required
+    @admin_required
+    def listar_pacientes():
+        """Listar todos os pacientes do sistema"""
+        pacientes = db.session.query(Paciente, Usuario).join(
+            Usuario, Paciente.usuario_id == Usuario.id
+        ).order_by(Usuario.nome_completo).all()
+        
+        return render_template('admin/listar_pacientes.html', pacientes=pacientes)
+    
+    @admin.route('/listar-psicologos')
+    @login_required
+    @admin_required
+    def listar_psicologos():
+        """Listar todos os psicólogos do sistema"""
+        psicologos = db.session.query(Psicologo, Usuario).join(
+            Usuario, Psicologo.usuario_id == Usuario.id
+        ).order_by(Usuario.nome_completo).all()
+        
+        return render_template('admin/listar_psicologos.html', psicologos=psicologos)
+    
+    @admin.route('/agendamentos')
+    @login_required
+    @admin_required
+    def agendamentos():
+        """Listar todos os agendamentos com filtros"""
+        # Parâmetros de filtro
+        psicologo_filtro = request.args.get('psicologo_id', type=int)
+        paciente_filtro = request.args.get('paciente_id', type=int)
+        status_filtro = request.args.get('status')
+        data_inicio = request.args.get('data_inicio')
+        data_fim = request.args.get('data_fim')
+        
+        # Query base
+        query = db.session.query(
+            Agendamento,
+            Usuario.label('paciente_nome'),
+            Usuario.label('psicologo_nome')
+        ).join(
+            Paciente, Agendamento.paciente_id == Paciente.id
+        ).join(
+            Usuario, Paciente.usuario_id == Usuario.id, aliased=True
+        ).join(
+            Psicologo, Agendamento.psicologo_id == Psicologo.id
+        ).join(
+            Usuario, Psicologo.usuario_id == Usuario.id, aliased=True
+        )
+        
+        # Aplicar filtros
+        if psicologo_filtro:
+            query = query.filter(Agendamento.psicologo_id == psicologo_filtro)
+        
+        if paciente_filtro:
+            query = query.filter(Agendamento.paciente_id == paciente_filtro)
+        
+        if status_filtro:
+            query = query.filter(Agendamento.status == status_filtro)
+        
+        if data_inicio:
+            from datetime import datetime
+            data_inicio_dt = datetime.strptime(data_inicio, '%Y-%m-%d')
+            query = query.filter(func.date(Agendamento.data_hora) >= data_inicio_dt.date())
+        
+        if data_fim:
+            from datetime import datetime
+            data_fim_dt = datetime.strptime(data_fim, '%Y-%m-%d')
+            query = query.filter(func.date(Agendamento.data_hora) <= data_fim_dt.date())
+        
+        agendamentos = query.order_by(Agendamento.data_hora.desc()).all()
+        
+        # Listas para os filtros
+        psicologos = db.session.query(Psicologo, Usuario).join(
+            Usuario, Psicologo.usuario_id == Usuario.id
+        ).order_by(Usuario.nome_completo).all()
+        
+        pacientes = db.session.query(Paciente, Usuario).join(
+            Usuario, Paciente.usuario_id == Usuario.id
+        ).order_by(Usuario.nome_completo).all()
+        
+        status_opcoes = ['agendado', 'confirmado', 'realizado', 'cancelado', 'ausencia']
+        
+        return render_template('admin/agendamentos.html', 
+                             agendamentos=agendamentos,
+                             psicologos=psicologos,
+                             pacientes=pacientes,
+                             status_opcoes=status_opcoes,
+                             filtros={
+                                 'psicologo_id': psicologo_filtro,
+                                 'paciente_id': paciente_filtro,
+                                 'status': status_filtro,
+                                 'data_inicio': data_inicio,
+                                 'data_fim': data_fim
+                             })

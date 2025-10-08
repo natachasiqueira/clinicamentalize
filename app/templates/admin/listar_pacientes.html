@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Listar Pacientes - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        <i class="fas fa-users me-2"></i>
+                        Todos os Pacientes Cadastrados
+                    </h4>
+                    <span class="badge bg-primary">{{ pacientes|length }} pacientes</span>
+                </div>
+                <div class="card-body">
+                    {% if pacientes %}
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nome Completo</th>
+                                        <th>E-mail</th>
+                                        <th>Telefone</th>
+                                        <th>Data de Cadastro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for paciente, usuario in pacientes %}
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-user me-2 text-primary"></i>
+                                            {{ usuario.nome_completo }}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-envelope me-2 text-muted"></i>
+                                            {{ usuario.email }}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-phone me-2 text-muted"></i>
+                                            {{ usuario.telefone or 'Não informado' }}
+                                        </td>
+                                        <td>
+                                            <i class="fas fa-clock me-2 text-muted"></i>
+                                            {{ usuario.data_criacao.strftime('%d/%m/%Y') if usuario.data_criacao else 'Não informado' }}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Nenhum paciente cadastrado</h5>
+                            <p class="text-muted">Não há pacientes registrados no sistema ainda.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Voltar ao Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Adicionar funcionalidade de busca na tabela
+document.addEventListener('DOMContentLoaded', function() {
+    // Adicionar campo de busca
+    const cardHeader = document.querySelector('.card-header');
+    const searchDiv = document.createElement('div');
+    searchDiv.className = 'mt-3';
+    searchDiv.innerHTML = `
+        <div class="input-group">
+            <span class="input-group-text">
+                <i class="fas fa-search"></i>
+            </span>
+            <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nome, e-mail ou telefone...">
+        </div>
+    `;
+    cardHeader.appendChild(searchDiv);
+    
+    // Funcionalidade de busca
+    const searchInput = document.getElementById('searchInput');
+    const tableRows = document.querySelectorAll('tbody tr');
+    
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        tableRows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
