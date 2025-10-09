@@ -11,82 +11,139 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* Nova Paleta de Cores Profissional */
+        /* Paleta Simplificada - Apenas Azul Petróleo e Verde Sálvia */
         :root {
-            --primary-color: #2C5F7C;      /* Azul Petróleo */
-            --secondary-color: #7A9A8B;    /* Verde Sálvia */
-            --accent-color: #E8D5C4;       /* Bege Quente */
-            --dark-color: #4A5568;         /* Cinza Grafite */
-            --light-color: #FEFEFE;        /* Branco Suave */
-            --success-color: #7A9A8B;      /* Verde Sálvia */
-            --warning-color: #D4A574;      /* Dourado Suave */
-            --danger-color: #C17B5A;       /* Terracota Suave */
-            --info-color: #9B8AA0;         /* Lavanda */
+            --primary-color: #2C5F7C;          /* Azul Petróleo */
+            --primary-light: #4A7A96;          /* Azul Petróleo Claro */
+            --primary-dark: #1E4A5F;           /* Azul Petróleo Escuro */
+            --primary-lighter: #E8F1F5;        /* Azul Petróleo Muito Claro */
+            
+            --secondary-color: #7A9A8B;        /* Verde Sálvia */
+            --secondary-light: #9BB5A8;        /* Verde Sálvia Claro */
+            --secondary-dark: #5A7A6B;         /* Verde Sálvia Escuro */
+            --secondary-lighter: #F0F5F2;      /* Verde Sálvia Muito Claro */
+            
+            --neutral-light: #F8F9FA;          /* Cinza Muito Claro */
+            --neutral-medium: #E9ECEF;         /* Cinza Claro */
+            --neutral-dark: #6C757D;           /* Cinza Escuro */
+            --white: #FFFFFF;                  /* Branco */
         }
 
-        /* Sobrescrever cores do Bootstrap */
+        /* Sobrescrever todas as cores do Bootstrap */
         .bg-primary { background-color: var(--primary-color) !important; }
         .text-primary { color: var(--primary-color) !important; }
         .btn-primary { 
             background-color: var(--primary-color); 
-            border-color: var(--primary-color); 
+            border-color: var(--primary-color);
+            color: var(--white);
         }
-        .btn-primary:hover { 
-            background-color: #1e4a5f; 
-            border-color: #1e4a5f; 
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active { 
+            background-color: var(--primary-dark); 
+            border-color: var(--primary-dark);
+            color: var(--white);
         }
         
-        .bg-success { background-color: var(--success-color) !important; }
-        .text-success { color: var(--success-color) !important; }
+        .bg-success { background-color: var(--secondary-color) !important; }
+        .text-success { color: var(--secondary-color) !important; }
         .btn-success { 
-            background-color: var(--success-color); 
-            border-color: var(--success-color); 
+            background-color: var(--secondary-color); 
+            border-color: var(--secondary-color);
+            color: var(--white);
+        }
+        .btn-success:hover, .btn-success:focus, .btn-success:active { 
+            background-color: var(--secondary-dark); 
+            border-color: var(--secondary-dark);
+            color: var(--white);
         }
         .btn-outline-success { 
-            color: var(--success-color); 
-            border-color: var(--success-color); 
+            color: var(--secondary-color); 
+            border-color: var(--secondary-color); 
+            background-color: transparent;
         }
-        .btn-outline-success:hover { 
-            background-color: var(--success-color); 
-            border-color: var(--success-color); 
+        .btn-outline-success:hover, .btn-outline-success:focus, .btn-outline-success:active { 
+            background-color: var(--secondary-color); 
+            border-color: var(--secondary-color);
+            color: var(--white);
         }
         
-        .bg-warning { background-color: var(--warning-color) !important; }
-        .text-warning { color: var(--warning-color) !important; }
-        .border-left-warning { border-left-color: var(--warning-color) !important; }
+        /* Usar verde sálvia para warning, info e danger também */
+        .bg-warning { background-color: var(--secondary-light) !important; }
+        .text-warning { color: var(--secondary-color) !important; }
+        .border-left-warning { border-left-color: var(--secondary-color) !important; }
+        .btn-warning { 
+            background-color: var(--secondary-light); 
+            border-color: var(--secondary-light);
+            color: var(--primary-dark);
+        }
+        .btn-warning:hover, .btn-warning:focus, .btn-warning:active { 
+            background-color: var(--secondary-color); 
+            border-color: var(--secondary-color);
+            color: var(--white);
+        }
         
-        .bg-danger { background-color: var(--danger-color) !important; }
-        .text-danger { color: var(--danger-color) !important; }
+        .bg-danger { background-color: var(--primary-light) !important; }
+        .text-danger { color: var(--primary-color) !important; }
+        .btn-danger { 
+            background-color: var(--primary-light); 
+            border-color: var(--primary-light);
+            color: var(--white);
+        }
+        .btn-danger:hover, .btn-danger:focus, .btn-danger:active { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color);
+            color: var(--white);
+        }
         
-        .bg-info { background-color: var(--info-color) !important; }
-        .text-info { color: var(--info-color) !important; }
+        .bg-info { background-color: var(--primary-lighter) !important; }
+        .text-info { color: var(--primary-color) !important; }
         .btn-info { 
-            background-color: var(--info-color); 
-            border-color: var(--info-color); 
+            background-color: var(--primary-light); 
+            border-color: var(--primary-light);
+            color: var(--white);
+        }
+        .btn-info:hover, .btn-info:focus, .btn-info:active { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color);
+            color: var(--white);
         }
         .btn-outline-info { 
-            color: var(--info-color); 
-            border-color: var(--info-color); 
+            color: var(--primary-color); 
+            border-color: var(--primary-color); 
+            background-color: transparent;
         }
-        .btn-outline-info:hover { 
-            background-color: var(--info-color); 
-            border-color: var(--info-color); 
+        .btn-outline-info:hover, .btn-outline-info:focus, .btn-outline-info:active { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color);
+            color: var(--white);
         }
         
         .btn-outline-primary { 
             color: var(--primary-color); 
             border-color: var(--primary-color); 
+            background-color: transparent;
         }
-        .btn-outline-primary:hover { 
+        .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active { 
             background-color: var(--primary-color); 
-            border-color: var(--primary-color); 
+            border-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-outline-secondary { 
+            color: var(--secondary-color); 
+            border-color: var(--secondary-color); 
+            background-color: transparent;
+        }
+        .btn-outline-secondary:hover, .btn-outline-secondary:focus, .btn-outline-secondary:active { 
+            background-color: var(--secondary-color); 
+            border-color: var(--secondary-color);
+            color: var(--white);
         }
 
         .navbar-brand {
             font-weight: bold;
         }
         .footer {
-            background-color: var(--accent-color);
+            background-color: var(--secondary-lighter);
             padding: 20px 0;
             margin-top: 50px;
         }
@@ -94,22 +151,59 @@
             margin-bottom: 0;
         }
         
-        /* Cards com nova paleta */
+        /* Cards com paleta simplificada */
         .card {
-            border: 1px solid #e8e8e8;
-            box-shadow: 0 2px 8px rgba(44, 95, 124, 0.1);
+            border: 1px solid var(--neutral-medium);
+            box-shadow: 0 2px 8px rgba(44, 95, 124, 0.08);
         }
         
         .card-header {
-            background-color: var(--accent-color);
-            border-bottom: 1px solid #d4d4d4;
+            background-color: var(--primary-lighter);
+            border-bottom: 1px solid var(--neutral-medium);
         }
         
         /* Bordas laterais dos cards */
         .border-left-primary { border-left: 0.25rem solid var(--primary-color) !important; }
-        .border-left-success { border-left: 0.25rem solid var(--success-color) !important; }
-        .border-left-info { border-left: 0.25rem solid var(--info-color) !important; }
-        .border-left-warning { border-left: 0.25rem solid var(--warning-color) !important; }
+        .border-left-success { border-left: 0.25rem solid var(--secondary-color) !important; }
+        .border-left-info { border-left: 0.25rem solid var(--primary-light) !important; }
+        .border-left-warning { border-left: 0.25rem solid var(--secondary-color) !important; }
+
+        /* Cores de texto neutras */
+        .text-gray-800 { color: var(--neutral-dark) !important; }
+        .text-gray-300 { color: var(--neutral-medium) !important; }
+        .text-gray-500 { color: var(--neutral-dark) !important; }
+        .text-gray-600 { color: var(--neutral-dark) !important; }
+
+        /* Links */
+        a { color: var(--primary-color); }
+        a:hover { color: var(--primary-dark); }
+
+        /* Alertas */
+        .alert-success { 
+            background-color: var(--secondary-lighter); 
+            border-color: var(--secondary-light); 
+            color: var(--secondary-dark); 
+        }
+        .alert-primary { 
+            background-color: var(--primary-lighter); 
+            border-color: var(--primary-light); 
+            color: var(--primary-dark); 
+        }
+        .alert-info { 
+            background-color: var(--primary-lighter); 
+            border-color: var(--primary-light); 
+            color: var(--primary-dark); 
+        }
+        .alert-warning { 
+            background-color: var(--secondary-lighter); 
+            border-color: var(--secondary-light); 
+            color: var(--secondary-dark); 
+        }
+        .alert-danger { 
+            background-color: var(--primary-lighter); 
+            border-color: var(--primary-light); 
+            color: var(--primary-dark); 
+        }
     </style>
 </head>
 <body>
