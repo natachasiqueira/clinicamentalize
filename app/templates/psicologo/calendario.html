@@ -179,7 +179,7 @@
                                             <small class="text-muted">{{ agendamento.data_hora|dia_semana_pt }}</small>
                                         </td>
                                         <td>
-                                            <span class="badge bg-secondary">
+                                            <span class="badge bg-primary">
                                                 {{ agendamento.data_hora.strftime('%H:%M') }}
                                             </span>
                                         </td>
@@ -214,13 +214,7 @@
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <button type="button" 
-                                                        class="btn btn-outline-primary btn-sm" 
-                                                        onclick="verDetalhes({{ agendamento.id }})" 
-                                                        title="Ver detalhes">
-                                                    <i class="fas fa-eye"></i>
-                                                </button>
-                                                {% if agendamento.status != 'realizado' %}
+                                                {% if agendamento.status == 'agendado' %}
                                                 <button type="button" 
                                                         class="btn btn-outline-warning btn-sm" 
                                                         onclick="marcarAusente({{ agendamento.id }})" 
