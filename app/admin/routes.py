@@ -385,8 +385,8 @@ def init_routes(admin):
     def agendamentos():
         """Listar todos os agendamentos com filtros"""
         # Parâmetros de filtro
-        psicologo_filtro = request.args.get('psicologo_id', type=int)
-        paciente_filtro = request.args.get('paciente_id', type=int)
+        psicologo_nome_filtro = request.args.get('psicologo_nome', '').strip()
+        paciente_nome_filtro = request.args.get('paciente_nome', '').strip()
         status_filtro = request.args.get('status')
         data_inicio = request.args.get('data_inicio')
         data_fim = request.args.get('data_fim')
@@ -412,11 +412,11 @@ def init_routes(admin):
         )
         
         # Aplicar filtros
-        if psicologo_filtro:
-            query = query.filter(Agendamento.psicologo_id == psicologo_filtro)
+        if psicologo_nome_filtro:
+            query = query.filter(UsuarioPsicologo.nome_completo.ilike(f"%{psicologo_nome_filtro}%"))
         
-        if paciente_filtro:
-            query = query.filter(Agendamento.paciente_id == paciente_filtro)
+        if paciente_nome_filtro:
+            query = query.filter(UsuarioPaciente.nome_completo.ilike(f"%{paciente_nome_filtro}%"))
         
         if status_filtro:
             query = query.filter(Agendamento.status == status_filtro)
@@ -433,26 +433,15 @@ def init_routes(admin):
         
         agendamentos = query.order_by(Agendamento.data_hora.desc()).all()
         
-        # Listas para os filtros
-        psicologos = db.session.query(Psicologo, Usuario).join(
-            Usuario, Psicologo.usuario_id == Usuario.id
-        ).order_by(Usuario.nome_completo).all()
-        
-        pacientes = db.session.query(Paciente, Usuario).join(
-            Usuario, Paciente.usuario_id == Usuario.id
-        ).order_by(Usuario.nome_completo).all()
-        
         status_opcoes = ['agendado', 'confirmado', 'realizado', 'cancelado', 'ausencia']
         
         return render_template('admin/agendamentos.html', 
                              agendamentos=agendamentos,
-                             psicologos=psicologos,
-                             pacientes=pacientes,
                              status_opcoes=status_opcoes,
                              filtros={
-                                 'psicologo_id': psicologo_filtro,
-                                 'paciente_id': paciente_filtro,
+                                 'psicologo_nome': psicologo_nome_filtro,
+                                 'paciente_nome': paciente_nome_filtro,
                                  'status': status_filtro,
                                  'data_inicio': data_inicio,
                                  'data_fim': data_fim
-                             })
+                              })

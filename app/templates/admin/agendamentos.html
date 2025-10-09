@@ -44,30 +44,16 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="psicologo_id" class="form-label">Psicólogo</label>
-                                            <select class="form-select" id="psicologo_id" name="psicologo_id">
-                                                <option value="">Todos os psicólogos</option>
-                                                {% for psicologo, usuario in psicologos %}
-                                                <option value="{{ psicologo.id }}" 
-                                                        {% if filtros.psicologo_id == psicologo.id %}selected{% endif %}>
-                                                    {{ usuario.nome_completo }}
-                                                </option>
-                                                {% endfor %}
-                                            </select>
+                                            <label for="psicologo_nome" class="form-label">Psicólogo</label>
+                                            <input type="text" class="form-control" id="psicologo_nome" name="psicologo_nome" 
+                                                   value="{{ filtros.psicologo_nome or '' }}" placeholder="Digite o nome do psicólogo...">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="mb-3">
-                                            <label for="paciente_id" class="form-label">Paciente</label>
-                                            <select class="form-select" id="paciente_id" name="paciente_id">
-                                                <option value="">Todos os pacientes</option>
-                                                {% for paciente, usuario in pacientes %}
-                                                <option value="{{ paciente.id }}" 
-                                                        {% if filtros.paciente_id == paciente.id %}selected{% endif %}>
-                                                    {{ usuario.nome_completo }}
-                                                </option>
-                                                {% endfor %}
-                                            </select>
+                                            <label for="paciente_nome" class="form-label">Paciente</label>
+                                            <input type="text" class="form-control" id="paciente_nome" name="paciente_nome" 
+                                                   value="{{ filtros.paciente_nome or '' }}" placeholder="Digite o nome do paciente...">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
