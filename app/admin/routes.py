@@ -24,8 +24,8 @@ def init_routes(admin):
     @admin_required
     def dashboard():
         """Dashboard administrativo"""
-        # Estatísticas básicas (excluindo administradores dos psicólogos)
-        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'paciente').count()
+        # Estatísticas básicas
+        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).count()
         total_psicologos = db.session.query(Psicologo).join(Usuario, Psicologo.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'psicologo').count()
         total_agendamentos = db.session.query(Agendamento).count()
         
