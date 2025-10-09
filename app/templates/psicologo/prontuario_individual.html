@@ -197,76 +197,28 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Configurar data atual no campo de data
-    const hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('dataObservacao').value = hoje;
-
-    // Form de nova observação
-    document.getElementById('formObservacoes').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const dataObservacao = document.getElementById('dataObservacao').value;
-        const observacoes = document.getElementById('observacoes').value;
-        
-        if (!observacoes.trim()) {
-            showAlert('Por favor, digite as observações.', 'warning');
-            return;
+// Função para mostrar alertas (global)
+function showAlert(message, type) {
+    const alertContainer = document.getElementById('alertContainer');
+    const alertId = 'alert-' + Date.now();
+    
+    const alertHTML = `
+        <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    alertContainer.insertAdjacentHTML('beforeend', alertHTML);
+    
+    // Auto-remover após 5 segundos
+    setTimeout(() => {
+        const alert = document.getElementById(alertId);
+        if (alert) {
+            alert.remove();
         }
-        
-        fetch(`/psicologo/paciente/{{ paciente.id }}/anotacao`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                data_sessao: dataObservacao,
-                anotacoes: observacoes
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showAlert(data.message, 'success');
-                // Limpar formulário
-                document.getElementById('observacoes').value = '';
-                // Recarregar página após 2 segundos
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            } else {
-                showAlert(data.error || 'Erro ao salvar observação', 'danger');
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            showAlert('Erro ao salvar observação', 'danger');
-        });
-    });
-
-    // Função para mostrar alertas
-    function showAlert(message, type) {
-        const alertContainer = document.getElementById('alertContainer');
-        const alertId = 'alert-' + Date.now();
-        
-        const alertHTML = `
-            <div id="${alertId}" class="alert alert-${type} alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        `;
-        
-        alertContainer.insertAdjacentHTML('beforeend', alertHTML);
-        
-        // Auto-remover após 5 segundos
-        setTimeout(() => {
-            const alert = document.getElementById(alertId);
-            if (alert) {
-                alert.remove();
-            }
-        }, 5000);
-    }
-});
+    }, 5000);
+}
 
 // Variável global para armazenar o ID da sessão sendo editada
 let sessaoEditandoId = null;
@@ -334,6 +286,54 @@ function salvarEdicaoSessao() {
         showAlert('Erro ao atualizar anotação', 'danger');
     });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Configurar data atual no campo de data
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('dataObservacao').value = hoje;
+
+    // Form de nova observação
+    document.getElementById('formObservacoes').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const dataObservacao = document.getElementById('dataObservacao').value;
+        const observacoes = document.getElementById('observacoes').value;
+        
+        if (!observacoes.trim()) {
+            showAlert('Por favor, digite as observações.', 'warning');
+            return;
+        }
+        
+        fetch(`/psicologo/paciente/{{ paciente.id }}/anotacao`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                data_sessao: dataObservacao,
+                anotacoes: observacoes
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                // Limpar formulário
+                document.getElementById('observacoes').value = '';
+                // Recarregar página após 2 segundos
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } else {
+                showAlert(data.error || 'Erro ao salvar observação', 'danger');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            showAlert('Erro ao salvar observação', 'danger');
+        });
+    });
+});
 </script>
 
 <style>

@@ -25,9 +25,7 @@ def init_routes(admin):
     def dashboard():
         """Dashboard administrativo"""
         # Estatísticas básicas
-        # Usar a mesma lógica da página listar_pacientes para garantir consistência
-        pacientes_query = db.session.query(Paciente, Usuario).join(Usuario, Paciente.usuario_id == Usuario.id)
-        total_pacientes = len(pacientes_query.all())
+        total_pacientes = db.session.query(Usuario).filter(Usuario.tipo_usuario == 'paciente').count()
         total_psicologos = db.session.query(Psicologo).join(Usuario, Psicologo.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'psicologo').count()
         total_agendamentos = db.session.query(Agendamento).count()
         
