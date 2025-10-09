@@ -1,8 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Agendamentos - Admin{% endblock %}
+{% block title %}Agendamentos{% endblock %}
 
 {% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-calendar-alt"></i> Agendamentos</h1>
+                <p class="text-muted mb-0">Bem-vindo, {{ current_user.nome_completo }}!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagens Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
 <div class="container mt-4">
     <div class="row">
         <div class="col-12">
@@ -164,34 +186,4 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Validação de datas
-    const dataInicio = document.getElementById('data_inicio');
-    const dataFim = document.getElementById('data_fim');
-    
-    dataInicio.addEventListener('change', function() {
-        if (dataFim.value && this.value > dataFim.value) {
-            alert('A data de início não pode ser posterior à data de fim.');
-            this.value = '';
-        }
-    });
-    
-    dataFim.addEventListener('change', function() {
-        if (dataInicio.value && this.value < dataInicio.value) {
-            alert('A data de fim não pode ser anterior à data de início.');
-            this.value = '';
-        }
-    });
-    
-    // Auto-submit quando filtros são alterados (opcional)
-    const filtros = document.querySelectorAll('#filtrosForm select, #filtrosForm input');
-    filtros.forEach(filtro => {
-        filtro.addEventListener('change', function() {
-            // Opcional: submeter automaticamente quando um filtro é alterado
-            // document.getElementById('filtrosForm').submit();
-        });
-    });
-});
-</script>
 {% endblock %}

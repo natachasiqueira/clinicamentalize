@@ -213,13 +213,28 @@
                                             {% endif %}
                                         </td>
                                         <td>
-                                            <button type="button" 
-                                                    class="btn btn-outline-primary btn-sm{% if agendamento.status == 'cancelado' %} disabled{% endif %}" 
-                                                    onclick="verDetalhes({{ agendamento.id }})" 
-                                                    title="Ver detalhes"
-                                                    {% if agendamento.status == 'cancelado' %}disabled{% endif %}>
-                                                <i class="fas fa-eye"></i>
-                                            </button>
+                                            <div class="btn-group" role="group">
+                                                <button type="button" 
+                                                        class="btn btn-outline-primary btn-sm" 
+                                                        onclick="verDetalhes({{ agendamento.id }})" 
+                                                        title="Ver detalhes">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                {% if agendamento.status != 'realizado' %}
+                                                <button type="button" 
+                                                        class="btn btn-outline-warning btn-sm" 
+                                                        onclick="marcarAusente({{ agendamento.id }})" 
+                                                        title="Marcar como ausente">
+                                                    <i class="fas fa-user-times"></i>
+                                                </button>
+                                                <button type="button" 
+                                                        class="btn btn-outline-success btn-sm" 
+                                                        onclick="marcarRealizada({{ agendamento.id }})" 
+                                                        title="Marcar como realizada">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                {% endif %}
+                                            </div>
                                         </td>
                                     </tr>
                                     {% endfor %}

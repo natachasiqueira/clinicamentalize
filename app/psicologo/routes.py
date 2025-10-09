@@ -325,6 +325,9 @@ def prontuarios():
     ).distinct().all()
     
     pacientes_data = []
+    pacientes_ativos = 0
+    pacientes_inativos = 0
+    
     for paciente in pacientes:
         # Última Consulta
         ultima_consulta = Agendamento.query.filter_by(
@@ -334,15 +337,12 @@ def prontuarios():
             Agendamento.data_hora <= datetime.now(timezone.utc)
         ).order_by(Agendamento.data_hora.desc()).first()
 
-        # Total de Sessões
-        prontuario_paciente = Prontuario.query.filter_by(
+        # Total de Sessões - contar consultas com status "Realizado"
+        total_sessoes = Agendamento.query.filter_by(
             paciente_id=paciente.id,
-            psicologo_id=psicologo.id
-        ).first()
-        
-        total_sessoes = 0
-        if prontuario_paciente:
-            total_sessoes = Sessao.query.filter_by(prontuario_id=prontuario_paciente.id).count()
+            psicologo_id=psicologo.id,
+            status='realizado'
+        ).count()
 
         # Status do Paciente (simplificado: ativo se tiver agendamentos futuros ou recentes)
         status = "Inativo"
@@ -355,6 +355,9 @@ def prontuarios():
 
         if agendamento_futuro or (ultima_consulta and (datetime.now(timezone.utc) - ultima_consulta.data_hora).days <= 90):
             status = "Ativo"
+            pacientes_ativos += 1
+        else:
+            pacientes_inativos += 1
         
         pacientes_data.append({
             'id': paciente.id,
@@ -372,6 +375,8 @@ def prontuarios():
     return render_template('psicologo/prontuarios.html', 
                          title='Prontuários',
                          pacientes=pacientes_data,
+                         pacientes_ativos=pacientes_ativos,
+                         pacientes_inativos=pacientes_inativos,
                          search=search)
 
 
@@ -520,6 +525,45 @@ def adicionar_anotacao(paciente_id):
             'data_criacao': nova_sessao.data_criacao.strftime('%d/%m/%Y %H:%M')
         }
     })
+
+
+@bp.route('/sessao/<int:sessao_id>/editar', methods=['PUT'])
+@login_required
+@psicologo_required
+def editar_sessao(sessao_id):
+    """API para editar uma sessão/anotação existente"""
+    psicologo = Psicologo.query.filter_by(usuario_id=current_user.id).first()
+    
+    # Buscar a sessão e verificar permissão
+    sessao = db.session.query(Sessao).join(Prontuario).filter(
+        Sessao.id == sessao_id,
+        Prontuario.psicologo_id == psicologo.id
+    ).first()
+    
+    if not sessao:
+        return jsonify({'error': 'Sessão não encontrada ou acesso negado'}), 404
+    
+    # Obter dados da requisição
+    data = request.get_json()
+    if not data or 'anotacoes' not in data:
+        return jsonify({'error': 'Anotações são obrigatórias'}), 400
+    
+    try:
+        # Atualizar a sessão
+        sessao.anotacoes = data['anotacoes']
+        if 'data_sessao' in data:
+            sessao.data_sessao = datetime.strptime(data['data_sessao'], '%Y-%m-%d').date()
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Anotação atualizada com sucesso!'
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Erro ao atualizar anotação: {str(e)}'}), 500
 
 
 @bp.route('/prontuario/<int:paciente_id>/recorrencia', methods=['POST'])

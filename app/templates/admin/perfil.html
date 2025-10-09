@@ -1,9 +1,30 @@
 {% extends "base.html" %}
 
-{% block title %}Editar Perfil - Admin{% endblock %}
+{% block title %}Perfil Administrativo{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container-fluid mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-user-cog"></i> Perfil Administrativo</h1>
+                <p class="text-muted mb-0">Bem-vindo, {{ current_user.nome_completo }}!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mensagens Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -14,16 +35,6 @@
                     </h4>
                 </div>
                 <div class="card-body">
-                    {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                            {% for category, message in messages %}
-                                <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-                    {% endwith %}
 
                     <form method="POST">
                         <div class="row">
@@ -88,25 +99,4 @@
         </div>
     </div>
 </div>
-
-<script>
-// Validação de senha no frontend
-document.getElementById('confirmar_senha').addEventListener('input', function() {
-    const novaSenha = document.getElementById('nova_senha').value;
-    const confirmarSenha = this.value;
-    
-    if (novaSenha && confirmarSenha && novaSenha !== confirmarSenha) {
-        this.setCustomValidity('As senhas não coincidem');
-    } else {
-        this.setCustomValidity('');
-    }
-});
-
-document.getElementById('nova_senha').addEventListener('input', function() {
-    const confirmarSenha = document.getElementById('confirmar_senha');
-    if (confirmarSenha.value) {
-        confirmarSenha.dispatchEvent(new Event('input'));
-    }
-});
-</script>
 {% endblock %}

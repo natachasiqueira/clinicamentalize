@@ -119,19 +119,26 @@
                             <div class="timeline-item mb-4">
                                 <div class="card">
                                     <div class="card-header bg-light">
-                                        <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-between align-items-center">
                                             <strong>
                                                 <i class="fas fa-calendar-day"></i> 
                                                 {{ sessao.data_sessao.strftime('%d/%m/%Y') }}
                                             </strong>
-                                            <small class="text-muted">
-                                                <i class="fas fa-clock"></i>
-                                                Registrado em {{ sessao.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
-                                            </small>
+                                            <div class="d-flex align-items-center">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-clock"></i>
+                                                    Registrado em {{ sessao.data_criacao.strftime('%d/%m/%Y às %H:%M') }}
+                                                </small>
+                                                <button class="btn btn-sm btn-outline-primary" 
+                                                        onclick="editarSessao({{ sessao.id }}, '{{ sessao.data_sessao.strftime('%Y-%m-%d') }}', `{{ sessao.anotacoes|replace('`', '\\`')|replace('\n', '\\n') }}`)"
+                                                        title="Editar anotação">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-0">{{ sessao.anotacoes }}</p>
+                                        <p class="mb-0" id="anotacao-{{ sessao.id }}">{{ sessao.anotacoes }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -152,6 +159,42 @@
 
 <!-- Alerts -->
 <div id="alertContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
+
+<!-- Modal para Editar Anotação -->
+<div class="modal fade" id="modalEditarAnotacao" tabindex="-1" aria-labelledby="modalEditarAnotacaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEditarAnotacaoLabel">
+                    <i class="fas fa-edit"></i> Editar Anotação
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditarAnotacao">
+                    <div class="mb-3">
+                        <label for="editDataSessao" class="form-label">Data da Sessão:</label>
+                        <input type="date" class="form-control" id="editDataSessao" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAnotacoes" class="form-label">Anotações:</label>
+                        <textarea class="form-control" id="editAnotacoes" rows="8" 
+                                  placeholder="Digite suas observações sobre o paciente, evolução do tratamento, técnicas utilizadas, etc..." 
+                                  required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-primary" onclick="salvarEdicaoSessao()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -224,6 +267,68 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 });
+
+// Variável global para armazenar o ID da sessão sendo editada
+let sessaoEditandoId = null;
+
+// Função para abrir modal de edição
+function editarSessao(sessaoId, dataSessao, anotacoes) {
+    sessaoEditandoId = sessaoId;
+    document.getElementById('editDataSessao').value = dataSessao;
+    document.getElementById('editAnotacoes').value = anotacoes;
+    
+    const modal = new bootstrap.Modal(document.getElementById('modalEditarAnotacao'));
+    modal.show();
+}
+
+// Função para salvar edição da sessão
+function salvarEdicaoSessao() {
+    if (!sessaoEditandoId) return;
+    
+    const dataSessao = document.getElementById('editDataSessao').value;
+    const anotacoes = document.getElementById('editAnotacoes').value;
+    
+    if (!anotacoes.trim()) {
+        showAlert('Por favor, digite as anotações.', 'warning');
+        return;
+    }
+    
+    fetch(`/psicologo/sessao/${sessaoEditandoId}/editar`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            data_sessao: dataSessao,
+            anotacoes: anotacoes
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showAlert(data.message, 'success');
+            
+            // Atualizar o conteúdo da anotação na página
+            const anotacaoElement = document.getElementById(`anotacao-${sessaoEditandoId}`);
+            if (anotacaoElement) {
+                anotacaoElement.textContent = anotacoes;
+            }
+            
+            // Fechar modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalEditarAnotacao'));
+            modal.hide();
+            
+            // Resetar variável
+            sessaoEditandoId = null;
+        } else {
+            showAlert(data.error || 'Erro ao atualizar anotação', 'danger');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        showAlert('Erro ao atualizar anotação', 'danger');
+    });
+}
 </script>
 
 <style>

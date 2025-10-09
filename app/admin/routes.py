@@ -25,7 +25,7 @@ def init_routes(admin):
     def dashboard():
         """Dashboard administrativo"""
         # Estatísticas básicas (excluindo administradores dos psicólogos)
-        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).count()
+        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'paciente').count()
         total_psicologos = db.session.query(Psicologo).join(Usuario, Psicologo.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'psicologo').count()
         total_agendamentos = db.session.query(Agendamento).count()
         
@@ -309,29 +309,37 @@ def init_routes(admin):
     def listar_pacientes():
         """Listar todos os pacientes do sistema com filtros"""
         # Parâmetros de filtro
-        busca = request.args.get('busca', '').strip()
+        nome_filtro = request.args.get('nome', '').strip()
+        email_filtro = request.args.get('email', '').strip()
+        telefone_filtro = request.args.get('telefone', '').strip()
         
         # Query base
         query = db.session.query(Paciente, Usuario).join(
             Usuario, Paciente.usuario_id == Usuario.id
         )
         
-        # Aplicar filtro de busca se fornecido
-        if busca:
-            filtro_busca = f"%{busca}%"
-            query = query.filter(
-                db.or_(
-                    Usuario.nome_completo.ilike(filtro_busca),
-                    Usuario.email.ilike(filtro_busca),
-                    Usuario.telefone.ilike(filtro_busca)
-                )
-            )
+        # Aplicar filtros
+        if nome_filtro:
+            query = query.filter(Usuario.nome_completo.ilike(f"%{nome_filtro}%"))
+        
+        if email_filtro:
+            query = query.filter(Usuario.email.ilike(f"%{email_filtro}%"))
+            
+        if telefone_filtro:
+            query = query.filter(Usuario.telefone.ilike(f"%{telefone_filtro}%"))
         
         pacientes = query.order_by(Usuario.nome_completo).all()
+        
+        # Criar objeto de filtros para o template
+        filtros = {
+            'nome': nome_filtro,
+            'email': email_filtro,
+            'telefone': telefone_filtro
+        }
 
         return render_template('admin/listar_pacientes.html', 
                              pacientes=pacientes,
-                             busca=busca)
+                             filtros=filtros)
     
     @admin.route('/listar-psicologos')
     @login_required
@@ -339,29 +347,37 @@ def init_routes(admin):
     def listar_psicologos():
         """Listar todos os psicólogos do sistema com filtros"""
         # Parâmetros de filtro
-        busca = request.args.get('busca', '').strip()
+        nome_filtro = request.args.get('nome', '').strip()
+        email_filtro = request.args.get('email', '').strip()
+        telefone_filtro = request.args.get('telefone', '').strip()
         
         # Query base
         query = db.session.query(Psicologo, Usuario).join(
             Usuario, Psicologo.usuario_id == Usuario.id
         )
         
-        # Aplicar filtro de busca se fornecido
-        if busca:
-            filtro_busca = f"%{busca}%"
-            query = query.filter(
-                db.or_(
-                    Usuario.nome_completo.ilike(filtro_busca),
-                    Usuario.email.ilike(filtro_busca),
-                    Usuario.telefone.ilike(filtro_busca)
-                )
-            )
+        # Aplicar filtros
+        if nome_filtro:
+            query = query.filter(Usuario.nome_completo.ilike(f"%{nome_filtro}%"))
+        
+        if email_filtro:
+            query = query.filter(Usuario.email.ilike(f"%{email_filtro}%"))
+            
+        if telefone_filtro:
+            query = query.filter(Usuario.telefone.ilike(f"%{telefone_filtro}%"))
         
         psicologos = query.order_by(Usuario.nome_completo).all()
         
+        # Criar objeto de filtros para o template
+        filtros = {
+            'nome': nome_filtro,
+            'email': email_filtro,
+            'telefone': telefone_filtro
+        }
+        
         return render_template('admin/listar_psicologos.html', 
                              psicologos=psicologos,
-                             busca=busca)
+                             filtros=filtros)
     
     @admin.route('/agendamentos')
     @login_required
