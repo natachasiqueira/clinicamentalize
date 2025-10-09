@@ -132,7 +132,8 @@
                         <!-- Data -->
                         <div class="col-md-6 mb-3">
                             <label for="data" class="form-label">Data *</label>
-                            <input type="date" class="form-control" id="data" name="data" required disabled placeholder="Selecione primeiro um psicólogo">
+                            <input type="text" class="form-control" id="data" name="data" required disabled readonly 
+                                   value="Escolha primeiro um psicólogo" style="color: #6c757d;">
                         </div>
                         
                         <!-- Horário -->
@@ -218,12 +219,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const psicologoId = this.value;
         if (psicologoId) {
             carregarDatasDisponiveis(psicologoId);
+            // Transformar o campo em date picker
+            dataInput.type = 'date';
+            dataInput.value = '';
+            dataInput.style.color = '';
             dataInput.disabled = false;
+            dataInput.readOnly = false;
             psicologoInfo.innerHTML = '<i class="fas fa-check text-success"></i> Psicólogo selecionado';
         } else {
+            // Voltar ao estado inicial
+            dataInput.type = 'text';
+            dataInput.value = 'Escolha primeiro um psicólogo';
+            dataInput.style.color = '#6c757d';
             dataInput.disabled = true;
+            dataInput.readOnly = true;
             horarioSelect.disabled = true;
-            dataInput.value = '';
             horarioSelect.innerHTML = '<option value="">Selecione primeiro uma data</option>';
             psicologoInfo.innerHTML = '';
         }
