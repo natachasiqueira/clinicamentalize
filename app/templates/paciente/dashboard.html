@@ -17,11 +17,11 @@
     <div class="row mb-4">
         <!-- Próxima Consulta -->
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card border-left-success shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                 Próxima Consulta
                             </div>
                             <div class="h6 mb-0 text-gray-600">
@@ -78,21 +78,21 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <button type="button" class="btn btn-outline-success btn-block py-3" data-bs-toggle="modal" data-bs-target="#modalAgendamento">
+                            <button type="button" class="btn btn-primary btn-block py-3" data-bs-toggle="modal" data-bs-target="#modalAgendamento">
                                 <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
                                 <strong>Agendar Consulta</strong><br>
                                 <small class="text-muted">Marque suas consultas online</small>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <a href="{{ url_for('paciente.agendamentos') }}" class="btn btn-outline-primary btn-block py-3">
+                            <a href="{{ url_for('paciente.agendamentos') }}" class="btn btn-primary btn-block py-3">
                                 <i class="fas fa-calendar-alt fa-2x mb-2"></i><br>
                                 <strong>Minhas Consultas</strong><br>
                                 <small class="text-muted">Visualize seu histórico de consultas</small>
                             </a>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <a href="{{ url_for('paciente.perfil') }}" class="btn btn-outline-info btn-block py-3">
+                            <a href="{{ url_for('paciente.perfil') }}" class="btn btn-primary btn-block py-3">
                                 <i class="fas fa-user-cog fa-2x mb-2"></i><br>
                                 <strong>Meus Dados</strong><br>
                                 <small class="text-muted">Gerencie seus dados pessoais e senha</small>
