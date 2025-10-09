@@ -15,6 +15,29 @@
                     <span class="badge bg-primary">{{ pacientes|length }} pacientes</span>
                 </div>
                 <div class="card-body">
+                    <!-- Filtros de busca -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <form method="GET" action="{{ url_for('admin.listar_pacientes') }}">
+                                <div class="input-group">
+                                    <input type="text" 
+                                           class="form-control" 
+                                           name="busca" 
+                                           value="{{ busca or '' }}"
+                                           placeholder="Buscar por nome, e-mail ou telefone...">
+                                    <button class="btn btn-primary" type="submit">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                    {% if busca %}
+                                    <a href="{{ url_for('admin.listar_pacientes') }}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times"></i> Limpar
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    
                     {% if pacientes %}
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
@@ -60,7 +83,7 @@
                 </div>
                 <div class="card-footer">
                     <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Voltar ao Dashboard
+                        <i class="fas fa-arrow-left me-2"></i>Voltar à Página Principal
                     </a>
                 </div>
             </div>
