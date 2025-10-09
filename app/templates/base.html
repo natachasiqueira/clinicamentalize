@@ -11,17 +11,105 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Nova Paleta de Cores Profissional */
+        :root {
+            --primary-color: #2C5F7C;      /* Azul Petróleo */
+            --secondary-color: #7A9A8B;    /* Verde Sálvia */
+            --accent-color: #E8D5C4;       /* Bege Quente */
+            --dark-color: #4A5568;         /* Cinza Grafite */
+            --light-color: #FEFEFE;        /* Branco Suave */
+            --success-color: #7A9A8B;      /* Verde Sálvia */
+            --warning-color: #D4A574;      /* Dourado Suave */
+            --danger-color: #C17B5A;       /* Terracota Suave */
+            --info-color: #9B8AA0;         /* Lavanda */
+        }
+
+        /* Sobrescrever cores do Bootstrap */
+        .bg-primary { background-color: var(--primary-color) !important; }
+        .text-primary { color: var(--primary-color) !important; }
+        .btn-primary { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color); 
+        }
+        .btn-primary:hover { 
+            background-color: #1e4a5f; 
+            border-color: #1e4a5f; 
+        }
+        
+        .bg-success { background-color: var(--success-color) !important; }
+        .text-success { color: var(--success-color) !important; }
+        .btn-success { 
+            background-color: var(--success-color); 
+            border-color: var(--success-color); 
+        }
+        .btn-outline-success { 
+            color: var(--success-color); 
+            border-color: var(--success-color); 
+        }
+        .btn-outline-success:hover { 
+            background-color: var(--success-color); 
+            border-color: var(--success-color); 
+        }
+        
+        .bg-warning { background-color: var(--warning-color) !important; }
+        .text-warning { color: var(--warning-color) !important; }
+        .border-left-warning { border-left-color: var(--warning-color) !important; }
+        
+        .bg-danger { background-color: var(--danger-color) !important; }
+        .text-danger { color: var(--danger-color) !important; }
+        
+        .bg-info { background-color: var(--info-color) !important; }
+        .text-info { color: var(--info-color) !important; }
+        .btn-info { 
+            background-color: var(--info-color); 
+            border-color: var(--info-color); 
+        }
+        .btn-outline-info { 
+            color: var(--info-color); 
+            border-color: var(--info-color); 
+        }
+        .btn-outline-info:hover { 
+            background-color: var(--info-color); 
+            border-color: var(--info-color); 
+        }
+        
+        .btn-outline-primary { 
+            color: var(--primary-color); 
+            border-color: var(--primary-color); 
+        }
+        .btn-outline-primary:hover { 
+            background-color: var(--primary-color); 
+            border-color: var(--primary-color); 
+        }
+
         .navbar-brand {
             font-weight: bold;
         }
         .footer {
-            background-color: #f8f9fa;
+            background-color: var(--accent-color);
             padding: 20px 0;
             margin-top: 50px;
         }
         .alert {
             margin-bottom: 0;
         }
+        
+        /* Cards com nova paleta */
+        .card {
+            border: 1px solid #e8e8e8;
+            box-shadow: 0 2px 8px rgba(44, 95, 124, 0.1);
+        }
+        
+        .card-header {
+            background-color: var(--accent-color);
+            border-bottom: 1px solid #d4d4d4;
+        }
+        
+        /* Bordas laterais dos cards */
+        .border-left-primary { border-left: 0.25rem solid var(--primary-color) !important; }
+        .border-left-success { border-left: 0.25rem solid var(--success-color) !important; }
+        .border-left-info { border-left: 0.25rem solid var(--info-color) !important; }
+        .border-left-warning { border-left: 0.25rem solid var(--warning-color) !important; }
     </style>
 </head>
 <body>
