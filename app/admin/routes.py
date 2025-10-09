@@ -25,9 +25,9 @@ def init_routes(admin):
     def dashboard():
         """Dashboard administrativo"""
         # Estatísticas básicas (excluindo administradores dos psicólogos)
-        total_pacientes = Paciente.query.count()
-        total_psicologos = Psicologo.query.join(Usuario).filter(Usuario.tipo_usuario == 'psicologo').count()
-        total_agendamentos = Agendamento.query.count()
+        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).count()
+        total_psicologos = db.session.query(Psicologo).join(Usuario, Psicologo.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'psicologo').count()
+        total_agendamentos = db.session.query(Agendamento).count()
         
         # Dados reais para os gráficos
         from datetime import datetime, timedelta
@@ -337,19 +337,24 @@ def init_routes(admin):
         data_inicio = request.args.get('data_inicio')
         data_fim = request.args.get('data_fim')
         
+        # Criar aliases para evitar conflitos
+        from sqlalchemy.orm import aliased
+        UsuarioPaciente = aliased(Usuario)
+        UsuarioPsicologo = aliased(Usuario)
+        
         # Query base
         query = db.session.query(
             Agendamento,
-            Usuario.label('paciente_nome'),
-            Usuario.label('psicologo_nome')
+            UsuarioPaciente.nome_completo.label('paciente_nome'),
+            UsuarioPsicologo.nome_completo.label('psicologo_nome')
         ).join(
             Paciente, Agendamento.paciente_id == Paciente.id
         ).join(
-            Usuario, Paciente.usuario_id == Usuario.id, aliased=True
+            UsuarioPaciente, Paciente.usuario_id == UsuarioPaciente.id
         ).join(
             Psicologo, Agendamento.psicologo_id == Psicologo.id
         ).join(
-            Usuario, Psicologo.usuario_id == Usuario.id, aliased=True
+            UsuarioPsicologo, Psicologo.usuario_id == UsuarioPsicologo.id
         )
         
         # Aplicar filtros
