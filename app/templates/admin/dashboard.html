@@ -82,7 +82,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <div>
-                                <h4 class="card-title">{{ total_pacientes }}</h4>
+                                <h4 class="card-title">{{ pacientes|length }}</h4>
                                 <p class="card-text">Total de Pacientes</p>
                             </div>
                             <div class="align-self-center">
@@ -201,10 +201,13 @@
         </div>
     </div>
 
+    <!-- Scripts necessários -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     
     <script>
+        // Aguardar o carregamento completo da página
+        document.addEventListener('DOMContentLoaded', function() {
         // 1. Gráfico de Agendamentos por Mês
         const ctxAgendamentos = document.getElementById('agendamentosPorMes').getContext('2d');
         new Chart(ctxAgendamentos, {
@@ -405,5 +408,6 @@
                 }
             }
         });
+    });
     </script>
 {% endblock %}
