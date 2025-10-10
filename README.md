@@ -23,14 +23,25 @@ Sistema web completo para gestão de clínica de psicologia desenvolvido em Flas
 - **Relatórios**: Acompanhamento de pacientes e sessões
 
 ### Área Administrativa
-- **Dashboard executivo**: Indicadores e métricas da clínica
-  - Agendamentos por mês
-  - Taxa de retenção de pacientes
-  - Frequência de sessões
-  - Taxa de ocupação dos profissionais
-  - Taxa de no-show
-  - Número de casos ativos
-- **Gestão de usuários**: Cadastro e gerenciamento de psicólogos
+- **Dashboard executivo**: Indicadores e métricas avançadas da clínica
+  - Estatísticas gerais (total de pacientes, psicólogos e agendamentos)
+  - Gráficos interativos de agendamentos por mês
+  - Taxa de retenção de pacientes com análise temporal
+  - Distribuição de frequência de sessões por paciente
+  - Taxa de ocupação individual dos profissionais
+  - Taxa de no-show mensal com tendências
+  - Número de casos ativos por profissional
+- **Gestão de usuários**: Sistema completo de administração de usuários
+  - Cadastro de novos psicólogos com validações
+  - Listagem de pacientes com filtros avançados (nome, email, telefone)
+  - Listagem de psicólogos com sistema de busca e filtros
+- **Gestão de agendamentos**: Controle total dos agendamentos da clínica
+  - Visualização de todos os agendamentos do sistema
+  - Filtros por psicólogo, paciente, status e período
+  - Análise de status dos agendamentos (agendado, confirmado, realizado, cancelado, ausência)
+- **Perfil administrativo**: Gestão do próprio perfil
+  - Edição de dados pessoais do administrador
+  - Alteração segura de senha com validações
 
 
 ### Sistema de Prontuários
