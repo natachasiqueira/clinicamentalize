@@ -5,34 +5,16 @@ from app.models import Usuario, Paciente
 from datetime import date
 
 @pytest.fixture
-def app():
-    """Cria uma instância da aplicação para testes"""
-    app = create_app()
-    app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
-    app.config['WTF_CSRF_ENABLED'] = False
-    
-    with app.app_context():
-        db.create_all()
-        yield app
-        db.drop_all()
-
-@pytest.fixture
-def client(app):
-    """Cliente de teste"""
-    return app.test_client()
-
-@pytest.fixture
 def usuario_admin(app):
     """Cria um usuário administrador para testes"""
     with app.app_context():
         usuario = Usuario(
             nome_completo='Admin Teste',
-            email='admin@clinicamentalize.com.br',
+            email='admin@teste.com.br',
             telefone='(11) 99999-9999',
             tipo_usuario='admin'
         )
-        usuario.set_senha('admin123')
+        usuario.set_senha('senha123')
         db.session.add(usuario)
         db.session.commit()
         return usuario
