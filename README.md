@@ -87,6 +87,10 @@ Sistema web completo para gestão de clínica de psicologia desenvolvido em Flas
 
 **Usuário padrão criado automaticamente**:
   - **Admin**: admin@clinicamentalize.com.br (senha: admin123)
+    - Acesso completo ao dashboard administrativo
+    - Permissões para cadastrar psicólogos
+    - Visualização de relatórios e métricas avançadas
+    - Gestão de todos os usuários e agendamentos do sistema
 
 
 ## 🗄️ Modelos de Dados
