@@ -32,18 +32,18 @@
                             </h6>
                             <form method="GET" id="filtrosForm">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="psicologo_nome">Psicólogo</label>
                                             <input type="text" class="form-control" id="psicologo_nome" name="psicologo_nome" 
-                                                   value="{{ filtros.psicologo_nome or '' }}" placeholder="Digite o nome do psicólogo...">
+                                                   value="{{ filtros.psicologo_nome or '' }}" placeholder="Digite o nome...">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="paciente_nome">Paciente</label>
                                             <input type="text" class="form-control" id="paciente_nome" name="paciente_nome" 
-                                                   value="{{ filtros.paciente_nome or '' }}" placeholder="Digite o nome do paciente...">
+                                                   value="{{ filtros.paciente_nome or '' }}" placeholder="Digite o nome...">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -74,13 +74,18 @@
                                                    value="{{ filtros.data_fim or '' }}">
                                         </div>
                                     </div>
+                                    <div class="col-md-1">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <button type="submit" class="btn btn-primary btn-block">
+                                                <i class="fas fa-filter"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-2">
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-filter"></i> Aplicar Filtros
-                                        </button>
-                                        <a href="{{ url_for('admin.agendamentos') }}" class="btn btn-outline-secondary ml-2">
+                                        <a href="{{ url_for('admin.agendamentos') }}" class="btn btn-outline-secondary">
                                             <i class="fas fa-times"></i> Limpar Filtros
                                         </a>
                                     </div>
