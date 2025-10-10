@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Agendamentos{% endblock %}
 
@@ -9,53 +9,47 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1><i class="fas fa-calendar-alt"></i> Agendamentos</h1>
                 <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Página Principal
+                    <i class="fas fa-arrow-left"></i>Página Principal
                 </a>
             </div>
         </div>
     </div>
 
-    <!-- Mensagens Flash -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-<div class="container mt-4">
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        <i class="fas fa-calendar-alt"></i> Lista de Agendamentos
+                    </h6>
+                </div>
                 <div class="card-body">
                     <!-- Filtros -->
                     <div class="row mb-4">
                         <div class="col-12">
-                            <h5>Filtros</h5>
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-filter"></i> Filtros
+                            </h6>
                             <form method="GET" id="filtrosForm">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="psicologo_nome" class="form-label">Psicólogo</label>
+                                        <div class="form-group">
+                                            <label for="psicologo_nome">Psicólogo</label>
                                             <input type="text" class="form-control" id="psicologo_nome" name="psicologo_nome" 
                                                    value="{{ filtros.psicologo_nome or '' }}" placeholder="Digite o nome do psicólogo...">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <div class="mb-3">
-                                            <label for="paciente_nome" class="form-label">Paciente</label>
+                                        <div class="form-group">
+                                            <label for="paciente_nome">Paciente</label>
                                             <input type="text" class="form-control" id="paciente_nome" name="paciente_nome" 
                                                    value="{{ filtros.paciente_nome or '' }}" placeholder="Digite o nome do paciente...">
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="mb-3">
-                                            <label for="status" class="form-label">Status</label>
-                                            <select class="form-select" id="status" name="status">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="status">Status</label>
+                                            <select class="form-control" id="status" name="status">
                                                 <option value="">Todos os status</option>
                                                 {% for status_opcao in status_opcoes %}
                                                 <option value="{{ status_opcao }}" 
@@ -67,15 +61,15 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="mb-3">
-                                            <label for="data_inicio" class="form-label">Data Início</label>
+                                        <div class="form-group">
+                                            <label for="data_inicio">Data Início</label>
                                             <input type="date" class="form-control" id="data_inicio" name="data_inicio" 
                                                    value="{{ filtros.data_inicio or '' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <div class="mb-3">
-                                            <label for="data_fim" class="form-label">Data Fim</label>
+                                        <div class="form-group">
+                                            <label for="data_fim">Data Fim</label>
                                             <input type="date" class="form-control" id="data_fim" name="data_fim" 
                                                    value="{{ filtros.data_fim or '' }}">
                                         </div>
@@ -83,11 +77,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary me-2">
-                                            <i class="fas fa-filter me-2"></i>Aplicar Filtros
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-filter"></i> Aplicar Filtros
                                         </button>
-                                        <a href="{{ url_for('admin.agendamentos') }}" class="btn btn-outline-secondary">
-                                            <i class="fas fa-times me-2"></i>Limpar Filtros
+                                        <a href="{{ url_for('admin.agendamentos') }}" class="btn btn-outline-secondary ml-2">
+                                            <i class="fas fa-times"></i> Limpar Filtros
                                         </a>
                                     </div>
                                 </div>
@@ -99,36 +93,34 @@
 
                     <!-- Resultados -->
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5>Resultados</h5>
+                        <h6 class="text-primary mb-0">
+                            <i class="fas fa-list"></i> Resultados
+                        </h6>
                         <span class="badge bg-info">{{ agendamentos|length }} agendamentos encontrados</span>
                     </div>
 
                     {% if agendamentos %}
                         <div class="table-responsive">
-                            <small class="text-muted mb-2 d-block">Lista completa de agendamentos do sistema</small>
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
+                            <table class="table table-hover mb-0">
+                                <thead class="thead-light">
                                     <tr>
-                                        <th>Data/Hora</th>
-                                        <th>Paciente</th>
-                                        <th>Psicólogo</th>
-                                        <th>Status</th>
-                                        <th>Observações</th>
+                                        <th><i class="fas fa-calendar"></i> Data/Hora</th>
+                                        <th><i class="fas fa-user"></i> Paciente</th>
+                                        <th><i class="fas fa-user-md"></i> Psicólogo</th>
+                                        <th><i class="fas fa-info-circle"></i> Status</th>
+                                        <th><i class="fas fa-comment"></i> Observações</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for agendamento, paciente_nome, psicologo_nome in agendamentos %}
                                     <tr>
                                         <td>
-                                            <i class="fas fa-calendar me-2 text-primary"></i>
                                             {{ agendamento.data_hora.strftime('%d/%m/%Y %H:%M') }}
                                         </td>
                                         <td>
-                                            <i class="fas fa-user me-2 text-info"></i>
                                             {{ paciente_nome }}
                                         </td>
                                         <td>
-                                            <i class="fas fa-user-md me-2 text-success"></i>
                                             {{ psicologo_nome }}
                                         </td>
                                         <td>
@@ -161,12 +153,11 @@
                 </div>
                 <div class="card-footer">
                     <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left me-2"></i>Voltar à Página Principal
+                        <i class="fas fa-arrow-left"></i> Voltar
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}
