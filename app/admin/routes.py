@@ -33,12 +33,10 @@ def init_routes(admin):
         total_agendamentos = db.session.query(Agendamento).count()
         
         # Dados reais para os gráficos
-        from datetime import timedelta
-        from app.utils import get_local_now, convert_to_utc
+        from datetime import datetime, timedelta
         
-        # Usar timezone local configurado
-        agora_local = get_local_now()
-        agora_utc = convert_to_utc(agora_local)
+        # Defina o fuso horário para UTC para evitar erros de comparação
+        agora_utc = datetime.now(pytz.utc)
         data_limite = agora_utc - timedelta(days=180)  # aproximadamente 6 meses
 
         # Agendamentos por mês (últimos 6 meses)
