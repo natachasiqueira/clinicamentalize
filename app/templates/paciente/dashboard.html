@@ -75,27 +75,33 @@
                 <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Menu Principal</h6>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <button type="button" class="btn btn-primary btn-block py-3" data-bs-toggle="modal" data-bs-target="#modalAgendamento">
-                                <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
-                                <strong>Agendar Consulta</strong><br>
-                                <small class="text-light opacity-75">Marque suas consultas online</small>
+                <div class="card-body p-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <button type="button" class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center" 
+                                    data-bs-toggle="modal" data-bs-target="#modalAgendamento" 
+                                    style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                <i class="fas fa-plus-circle fa-3x mb-3" style="color: white;"></i>
+                                <h5 class="mb-2 text-white font-weight-bold">Agendar Consulta</h5>
+                                <p class="text-center text-white-50 mb-0 small">Marque suas consultas online de forma rápida e fácil</p>
                             </button>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ url_for('paciente.agendamentos') }}" class="btn btn-primary btn-block py-3">
-                                <i class="fas fa-calendar-alt fa-2x mb-2"></i><br>
-                                <strong>Minhas Consultas</strong><br>
-                                <small class="text-light opacity-75">Visualize seu histórico de consultas</small>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="{{ url_for('paciente.agendamentos') }}" 
+                               class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center text-decoration-none" 
+                               style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                <i class="fas fa-calendar-alt fa-3x mb-3" style="color: white;"></i>
+                                <h5 class="mb-2 text-white font-weight-bold">Minhas Consultas</h5>
+                                <p class="text-center text-white-50 mb-0 small">Visualize seu histórico e próximas consultas</p>
                             </a>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ url_for('paciente.perfil') }}" class="btn btn-primary btn-block py-3">
-                                <i class="fas fa-user-cog fa-2x mb-2"></i><br>
-                                <strong>Meus Dados</strong><br>
-                                <small class="text-light opacity-75">Gerencie seus dados pessoais e senha</small>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <a href="{{ url_for('paciente.perfil') }}" 
+                               class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center text-decoration-none" 
+                               style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+                                <i class="fas fa-user-cog fa-3x mb-3" style="color: white;"></i>
+                                <h5 class="mb-2 text-white font-weight-bold">Meus Dados</h5>
+                                <p class="text-center text-white-50 mb-0 small">Gerencie seus dados pessoais e configurações</p>
                             </a>
                         </div>
                     </div>

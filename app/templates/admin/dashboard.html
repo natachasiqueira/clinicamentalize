@@ -247,8 +247,8 @@
                     datasets: [{
                         label: 'Taxa de Retenção (%)',
                         data: [{% for item in taxa_retencao %}{{ item.taxa }}{% if not loop.last %},{% endif %}{% endfor %}],
-                        backgroundColor: 'rgba(122, 154, 139, 0.2)',
-                        borderColor: 'rgba(122, 154, 139, 1)',
+                        backgroundColor: 'rgba(44, 95, 124, 0.2)',
+                        borderColor: 'rgba(44, 95, 124, 1)',
                         borderWidth: 2,
                         fill: true
                     }]
@@ -287,14 +287,14 @@
                         backgroundColor: [
                             'rgba(44, 95, 124, 0.8)',
                             'rgba(74, 122, 150, 0.8)',
-                            'rgba(122, 154, 139, 0.8)',
-                            'rgba(155, 181, 168, 0.8)'
+                            'rgba(27, 58, 75, 0.8)',
+                            'rgba(30, 74, 95, 0.8)'
                         ],
                         borderColor: [
                             'rgba(44, 95, 124, 1)',
                             'rgba(74, 122, 150, 1)',
-                            'rgba(122, 154, 139, 1)',
-                            'rgba(155, 181, 168, 1)'
+                            'rgba(27, 58, 75, 1)',
+                            'rgba(30, 74, 95, 1)'
                         ],
                         borderWidth: 1
                     }]
@@ -355,8 +355,8 @@
                     datasets: [{
                         label: 'Taxa de Faltas (%)',
                         data: [{% for item in taxa_noshow %}{{ item.taxa }}{% if not loop.last %},{% endif %}{% endfor %}],
-                        backgroundColor: 'rgba(90, 122, 107, 0.2)',
-                        borderColor: 'rgba(90, 122, 107, 1)',
+                        backgroundColor: 'rgba(44, 95, 124, 0.2)',
+                        borderColor: 'rgba(44, 95, 124, 1)',
                         borderWidth: 2,
                         fill: true
                     }]
