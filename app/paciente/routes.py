@@ -340,9 +340,10 @@ def api_horarios_disponiveis():
         horarios_finais = [h for h in horarios_disponiveis if h not in horarios_ocupados]
         
         # Se a data for hoje, filtrar horários que já passaram ou estão a menos de 1 hora do atual
-        hoje = datetime.now().date()
+        from app.utils import get_local_now
+        hoje = get_local_now().date()
         if data == hoje:
-            hora_atual = datetime.now()
+            hora_atual = get_local_now()
             hora_limite = hora_atual + timedelta(hours=1)
             
             # Filtrar apenas horários que estão pelo menos 1 hora à frente do horário atual

@@ -19,6 +19,9 @@ class Config:
     EMAILJS_PUBLIC_KEY = os.environ.get('EMAILJS_PUBLIC_KEY')
     EMAILJS_SERVICE_ID = os.environ.get('EMAILJS_SERVICE_ID')
     EMAILJS_TEMPLATE_ID = os.environ.get('EMAILJS_TEMPLATE_ID')
+    
+    # Configurações de Timezone
+    TIMEZONE = os.environ.get('TIMEZONE') or 'America/Sao_Paulo'
 
 class DevelopmentConfig(Config):
     """Configuração para desenvolvimento"""
