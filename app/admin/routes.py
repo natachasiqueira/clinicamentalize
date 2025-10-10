@@ -20,62 +20,7 @@ def admin_required(f):
 def init_routes(admin):
     """Inicializa as rotas do admin"""
     
-    @admin.route('/debug-admin')
-    def debug_admin():
-        """Rota temporária para debug do usuário admin"""
-        try:
-            # Busca todos os usuários admin
-            admins = Usuario.query.filter_by(tipo_usuario='admin').all()
-            
-            debug_info = {
-                'total_admins': len(admins),
-                'admins': []
-            }
-            
-            for admin in admins:
-                debug_info['admins'].append({
-                    'id': admin.id,
-                    'nome': admin.nome_completo,
-                    'email': admin.email,
-                    'tipo': admin.tipo_usuario,
-                    'ativo': admin.ativo,
-                    'senha_hash': admin.senha_hash[:30] + '...' if admin.senha_hash else 'None'
-                })
-            
-            # Tenta criar admin se não existir
-            admin_email = 'admin@clinicamentalize.com.br'
-            existing_admin = Usuario.query.filter_by(email=admin_email, tipo_usuario='admin').first()
-            
-            if not existing_admin:
-                default_password = os.environ.get('DEFAULT_ADMIN_PASSWORD', 'admin123')
-                
-                new_admin = Usuario(
-                    nome_completo='Administrativo',
-                    tipo_usuario='admin',
-                    email=admin_email,
-                    telefone='(11) 96331-3561',
-                    ativo=True
-                )
-                new_admin.set_senha(default_password)
-                
-                db.session.add(new_admin)
-                db.session.commit()
-                
-                debug_info['admin_created'] = True
-                debug_info['new_admin_email'] = admin_email
-                debug_info['new_admin_password'] = default_password
-            else:
-                debug_info['admin_created'] = False
-                debug_info['existing_admin'] = {
-                    'id': existing_admin.id,
-                    'email': existing_admin.email,
-                    'ativo': existing_admin.ativo
-                }
-            
-            return jsonify(debug_info)
-            
-        except Exception as e:
-            return jsonify({'error': str(e)})
+
     
     @admin.route('/dashboard')
     @login_required

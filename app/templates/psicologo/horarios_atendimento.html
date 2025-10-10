@@ -14,18 +14,6 @@
             </div>
         </div>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
     <div class="row">
         <!-- Formulário de Configuração -->
         <div class="col-lg-8">
@@ -37,11 +25,6 @@
                 </div>
                 <div class="card-body">
                     <form method="POST" id="horariosForm">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i>
-                            <strong>Instruções:</strong> Configure seus horários de atendimento por dia da semana. 
-                            Você pode definir horários de manhã e tarde separadamente. Deixe em branco os períodos que não atende.
-                        </div>
 
                         {% set dias_semana = [
                             ('segunda', 'Segunda-feira'),
@@ -54,19 +37,20 @@
                         ] %}
 
                         {% for dia_key, dia_nome in dias_semana %}
+                        {% set dia_index = loop.index0 %}
                         <div class="card mb-3">
                             <div class="card-header">
                                 <div class="form-check">
                                     <input class="form-check-input dia-checkbox" type="checkbox" 
                                            id="{{ dia_key }}_ativo" name="{{ dia_key }}_ativo"
-                                           {% if horarios_por_dia.get(loop.index0) %}checked{% endif %}>
+                                           {% if horarios_por_dia.get(dia_index) %}checked{% endif %}>
                                     <label class="form-check-label font-weight-bold" for="{{ dia_key }}_ativo">
                                         {{ dia_nome }}
                                     </label>
                                 </div>
                             </div>
                             <div class="card-body dia-horarios" id="{{ dia_key }}_horarios" 
-                                 {% if not horarios_por_dia.get(loop.index0) %}style="display: none;"{% endif %}>
+                                 {% if not horarios_por_dia.get(dia_index) %}style="display: none;"{% endif %}>
                                 <div class="row">
                                     <!-- Manhã -->
                                     <div class="col-md-6">
@@ -81,14 +65,10 @@
                                                     {% for hora in range(24) %}
                                                         {% set hora_str = '%02d:00'|format(hora) %}
                                                         {% set selected = false %}
-                                                        {% set dia_index = loop.index0 %}
-                                                        {% set outer_loop = loop %}
-                                                        {% if horarios_por_dia.get(dia_index) %}
-                                                            {% for h in horarios_por_dia.get(dia_index) %}
-                                                                {% if h.hora_inicio.strftime('%H:%M') == hora_str and outer_loop.index0 == 0 %}
-                                                                    {% set selected = true %}
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                        {% if horarios_por_dia.get(dia_index) and horarios_por_dia.get(dia_index)|length > 0 %}
+                                                            {% if horarios_por_dia.get(dia_index)[0].hora_inicio.strftime('%H:%M') == hora_str %}
+                                                                {% set selected = true %}
+                                                            {% endif %}
                                                         {% endif %}
                                                         <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
@@ -101,14 +81,10 @@
                                                     {% for hora in range(24) %}
                                                         {% set hora_str = '%02d:00'|format(hora) %}
                                                         {% set selected = false %}
-                                                        {% set dia_index = loop.index0 %}
-                                                        {% set outer_loop = loop %}
-                                                        {% if horarios_por_dia.get(dia_index) %}
-                                                            {% for h in horarios_por_dia.get(dia_index) %}
-                                                                {% if h.hora_fim.strftime('%H:%M') == hora_str and outer_loop.index0 == 0 %}
-                                                                    {% set selected = true %}
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                        {% if horarios_por_dia.get(dia_index) and horarios_por_dia.get(dia_index)|length > 0 %}
+                                                            {% if horarios_por_dia.get(dia_index)[0].hora_fim.strftime('%H:%M') == hora_str %}
+                                                                {% set selected = true %}
+                                                            {% endif %}
                                                         {% endif %}
                                                         <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
@@ -130,14 +106,10 @@
                                                     {% for hora in range(24) %}
                                                         {% set hora_str = '%02d:00'|format(hora) %}
                                                         {% set selected = false %}
-                                                        {% set dia_index = loop.index0 %}
-                                                        {% set outer_loop = loop %}
-                                                        {% if horarios_por_dia.get(dia_index) %}
-                                                            {% for h in horarios_por_dia.get(dia_index) %}
-                                                                {% if h.hora_inicio.strftime('%H:%M') == hora_str and outer_loop.index0 == 1 %}
-                                                                    {% set selected = true %}
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                        {% if horarios_por_dia.get(dia_index) and horarios_por_dia.get(dia_index)|length > 1 %}
+                                                            {% if horarios_por_dia.get(dia_index)[1].hora_inicio.strftime('%H:%M') == hora_str %}
+                                                                {% set selected = true %}
+                                                            {% endif %}
                                                         {% endif %}
                                                         <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
@@ -150,14 +122,10 @@
                                                     {% for hora in range(24) %}
                                                         {% set hora_str = '%02d:00'|format(hora) %}
                                                         {% set selected = false %}
-                                                        {% set dia_index = loop.index0 %}
-                                                        {% set outer_loop = loop %}
-                                                        {% if horarios_por_dia.get(dia_index) %}
-                                                            {% for h in horarios_por_dia.get(dia_index) %}
-                                                                {% if h.hora_fim.strftime('%H:%M') == hora_str and outer_loop.index0 == 1 %}
-                                                                    {% set selected = true %}
-                                                                {% endif %}
-                                                            {% endfor %}
+                                                        {% if horarios_por_dia.get(dia_index) and horarios_por_dia.get(dia_index)|length > 1 %}
+                                                            {% if horarios_por_dia.get(dia_index)[1].hora_fim.strftime('%H:%M') == hora_str %}
+                                                                {% set selected = true %}
+                                                            {% endif %}
                                                         {% endif %}
                                                         <option value="{{ hora_str }}" {% if selected %}selected{% endif %}>{{ hora_str }}</option>
                                                     {% endfor %}
