@@ -98,7 +98,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-{{ 'success' if agendamento.status == 'realizado' else 'danger' if agendamento.status == 'ausencia' else 'secondary' if agendamento.status == 'cancelado' else 'primary' if agendamento.status == 'confirmado' else 'warning' }}">
+                                            <span class="badge 
+                                                {% if agendamento.status == 'realizado' %}status-realizado
+                                                {% elif agendamento.status == 'ausencia' %}status-ausencia
+                                                {% elif agendamento.status == 'cancelado' %}status-cancelado
+                                                {% elif agendamento.status == 'confirmado' %}status-confirmado
+                                                {% elif agendamento.status == 'agendado' %}status-agendado
+                                                {% else %}status-agendado{% endif %}">
                                                 {% if agendamento.status == 'realizada' %}
                                                     Realizada
                                                 {% elif agendamento.status == 'ausencia' %}
@@ -195,7 +201,13 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge bg-{{ 'success' if agendamento.status == 'realizado' else 'danger' if agendamento.status == 'ausencia' else 'secondary' if agendamento.status == 'cancelado' else 'primary' if agendamento.status == 'confirmado' else 'warning' }}">
+                                            <span class="badge 
+                                                {% if agendamento.status == 'realizado' %}status-realizado
+                                                {% elif agendamento.status == 'ausencia' %}status-ausencia
+                                                {% elif agendamento.status == 'cancelado' %}status-cancelado
+                                                {% elif agendamento.status == 'confirmado' %}status-confirmado
+                                                {% elif agendamento.status == 'agendado' %}status-agendado
+                                                {% else %}status-agendado{% endif %}">
                                                 {% if agendamento.status == 'realizada' %}
                                                     Realizada
                                                 {% elif agendamento.status == 'ausencia' %}

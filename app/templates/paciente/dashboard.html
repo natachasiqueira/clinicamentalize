@@ -17,11 +17,11 @@
     <div class="row mb-4">
         <!-- Próxima Consulta -->
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card shadow h-100 py-2" style="border-left: 4px solid rgba(25, 135, 84, 0.6);">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: rgba(25, 135, 84, 0.8);">
                                 Próxima Consulta
                             </div>
                             <div class="h6 mb-0 text-gray-600">
@@ -44,11 +44,11 @@
 
         <!-- Total de Consultas -->
         <div class="col-xl-6 col-md-6 mb-4">
-            <div class="card border-left-success shadow h-100 py-2">
+            <div class="card shadow h-100 py-2" style="border-left: 4px solid rgba(13, 110, 253, 0.6);">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-uppercase mb-1" style="color: rgba(13, 110, 253, 0.8);">
                                 Total de Consultas
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -81,21 +81,21 @@
                             <button type="button" class="btn btn-primary btn-block py-3" data-bs-toggle="modal" data-bs-target="#modalAgendamento">
                                 <i class="fas fa-plus-circle fa-2x mb-2"></i><br>
                                 <strong>Agendar Consulta</strong><br>
-                                <small class="text-muted">Marque suas consultas online</small>
+                                <small class="text-light opacity-75">Marque suas consultas online</small>
                             </button>
                         </div>
                         <div class="col-md-4 mb-3">
                             <a href="{{ url_for('paciente.agendamentos') }}" class="btn btn-primary btn-block py-3">
                                 <i class="fas fa-calendar-alt fa-2x mb-2"></i><br>
                                 <strong>Minhas Consultas</strong><br>
-                                <small class="text-muted">Visualize seu histórico de consultas</small>
+                                <small class="text-light opacity-75">Visualize seu histórico de consultas</small>
                             </a>
                         </div>
                         <div class="col-md-4 mb-3">
                             <a href="{{ url_for('paciente.perfil') }}" class="btn btn-primary btn-block py-3">
                                 <i class="fas fa-user-cog fa-2x mb-2"></i><br>
                                 <strong>Meus Dados</strong><br>
-                                <small class="text-muted">Gerencie seus dados pessoais e senha</small>
+                                <small class="text-light opacity-75">Gerencie seus dados pessoais e senha</small>
                             </a>
                         </div>
                     </div>

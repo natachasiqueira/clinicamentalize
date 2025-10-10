@@ -67,17 +67,17 @@
                                     </td>
                                     <td>
                                         {% if agendamento.status == 'agendado' %}
-                                            <span class="badge bg-warning">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-agendado">{{ agendamento.status|title }}</span>
                                         {% elif agendamento.status == 'confirmado' %}
-                                            <span class="badge bg-primary">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-confirmado">{{ agendamento.status|title }}</span>
                                         {% elif agendamento.status == 'realizado' %}
-                                            <span class="badge bg-success">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-realizado">{{ agendamento.status|title }}</span>
                                         {% elif agendamento.status == 'ausencia' %}
-                                            <span class="badge bg-danger">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-ausencia">{{ agendamento.status|title }}</span>
                                         {% elif agendamento.status == 'cancelado' %}
-                                            <span class="badge bg-secondary">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-cancelado">{{ agendamento.status|title }}</span>
                                         {% else %}
-                                            <span class="badge bg-secondary">{{ agendamento.status|title }}</span>
+                                            <span class="badge status-cancelado">{{ agendamento.status|title }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
@@ -161,7 +161,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="badge bg-{{ 'success' if agendamento.status == 'realizado' or agendamento.status == 'realizada' else 'warning' if agendamento.status == 'ausencia' else 'danger' if agendamento.status == 'cancelado' else 'secondary' }}">
+                                        <span class="badge 
+                                            {% if agendamento.status == 'realizado' or agendamento.status == 'realizada' %}status-realizado
+                                            {% elif agendamento.status == 'ausencia' %}status-ausencia
+                                            {% elif agendamento.status == 'cancelado' %}status-cancelado
+                                            {% elif agendamento.status == 'confirmado' %}status-confirmado
+                                            {% elif agendamento.status == 'agendado' %}status-agendado
+                                            {% else %}status-cancelado{% endif %}">
                                             {{ 'Realizada' if agendamento.status == 'realizada' or agendamento.status == 'realizado' else 'Ausência' if agendamento.status == 'ausencia' else agendamento.status|title }}
                                         </span>
                                     </td>

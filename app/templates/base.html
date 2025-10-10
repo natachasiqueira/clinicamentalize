@@ -55,6 +55,35 @@
             border-color: var(--secondary-dark);
             color: var(--white);
         }
+
+        /* Cores para cabeçalhos de tabelas */
+        .table thead th {
+            background-color: var(--secondary-lighter) !important;
+            color: var(--secondary-dark) !important;
+            border-color: var(--secondary-light) !important;
+        }
+        
+        /* Status de agendamentos - cores suaves e opacas */
+        .badge.status-agendado { 
+            background-color: rgba(255, 193, 7, 0.7) !important; 
+            color: #856404 !important; 
+        }
+        .badge.status-confirmado { 
+            background-color: rgba(13, 110, 253, 0.7) !important; 
+            color: #0a58ca !important; 
+        }
+        .badge.status-realizado { 
+            background-color: rgba(25, 135, 84, 0.7) !important; 
+            color: #0f5132 !important; 
+        }
+        .badge.status-ausencia { 
+            background-color: rgba(220, 53, 69, 0.7) !important; 
+            color: #842029 !important; 
+        }
+        .badge.status-cancelado { 
+            background-color: rgba(108, 117, 125, 0.7) !important; 
+            color: #495057 !important; 
+        }
         .btn-outline-success { 
             color: var(--secondary-color); 
             border-color: var(--secondary-color); 
@@ -211,7 +240,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <span style="font-weight: bold; font-size: 1.2em;">Ψ</span> Mentalize
+                <span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;">ψ</span> Mentalize
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -284,7 +313,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><span style="font-weight: bold; font-size: 1.2em;">Ψ</span> Clínica Mentalize</h5>
+                    <h5><span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;">ψ</span> Clínica Mentalize</h5>
                     <p class="text-muted">Cuidando da sua saúde mental com excelência.</p>
                 </div>
                 <div class="col-md-6">

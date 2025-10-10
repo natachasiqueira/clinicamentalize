@@ -8,78 +8,79 @@
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1><i class="fas fa-file-medical"></i> Prontuários</h1>
-                <div></div>
+                <div>
                     <a href="{{ url_for('psicologo.dashboard') }}" class="btn btn-outline-secondary btn-sm">
                         <i class="fas fa-arrow-left"></i>Página Principal
                     </a>
                 </div>
-                <div class="btn-group" mb-3>
-                    <button type="button" class="btn btn-outline-primary" id="btn-lista">
-                        <i class="fas fa-list"></i> Lista
-                    </button>
-                    <button type="button" class="btn btn-outline-primary" id="btn-cards">
-                        <i class="fas fa-th-large"></i> Cards
-                    </button>
-                </div>
+            </div>
+            
+            <div class="btn-group mb-4">
+                <button type="button" class="btn btn-outline-secondary" id="btn-lista">
+                    <i class="fas fa-list"></i> Lista
+                </button>
+                <button type="button" class="btn btn-outline-secondary" id="btn-cards">
+                    <i class="fas fa-th-large"></i> Cards
+                </button>
             </div>
             
             <!-- Estatísticas -->
             <div class="row mb-4">
                 <div class="col-md-3">
-                    <div class="card bg-info text-white">
+                    <div class="card text-white" style="background-color: rgba(13, 110, 253, 0.15); border-left: 4px solid rgba(13, 110, 253, 0.6);">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h5 class="card-title">Total Pacientes</h5>
-                                    <h3>{{ pacientes|length }}</h3>
+                                    <h5 class="card-title text-dark">Total Pacientes</h5>
+                                    <h3 class="text-dark">{{ pacientes|length }}</h3>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-users fa-2x"></i>
+                                    <i class="fas fa-users fa-2x" style="color: rgba(13, 110, 253, 0.8);"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card bg-success text-white">
+                    <div class="card text-white" style="background-color: rgba(25, 135, 84, 0.15); border-left: 4px solid rgba(25, 135, 84, 0.6);">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h5 class="card-title">Prontuários</h5>
-                                    <h3>{{ pacientes|length }}</h3>
+                                    <h5 class="card-title text-dark">Prontuários</h5>
+                                    <h3 class="text-dark">{{ pacientes|length }}</h3>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-file-medical fa-2x"></i>
+                                    <i class="fas fa-file-medical fa-2x" style="color: rgba(25, 135, 84, 0.8);"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card bg-warning text-white">
+                    <div class="card text-white" style="background-color: rgba(255, 193, 7, 0.15); border-left: 4px solid rgba(255, 193, 7, 0.6);">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h5 class="card-title">Ativos</h5>
-                                    <h3>{{ pacientes_ativos }}</h3>
+                                    <h5 class="card-title text-dark">Ativos</h5>
+                                    <h3 class="text-dark">{{ pacientes_ativos }}</h3>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-heartbeat fa-2x"></i>
+                                    <i class="fas fa-heartbeat fa-2x" style="color: rgba(255, 193, 7, 0.8);"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <div class="card bg-danger text-white">
+                    <div class="card text-white" style="background-color: rgba(220, 53, 69, 0.15); border-left: 4px solid rgba(220, 53, 69, 0.6);">
                         <div class="card-body">
                             <div class="d-flex justify-content-between">
                                 <div>
-                                    <h5 class="card-title">Inativos</h5>
-                                    <h3>{{ pacientes_inativos }}</h3>
+                                    <h5 class="card-title text-dark">Inativos</h5>
+                                    <h3 class="text-dark">{{ pacientes_inativos }}</h3>
                                 </div>
                                 <div class="align-self-center">
-                                    <i class="fas fa-pause fa-2x"></i>
+                                    <i class="fas fa-pause fa-2x" style="color: rgba(220, 53, 69, 0.8);"></i>
                                 </div>
                             </div>
                         </div>
