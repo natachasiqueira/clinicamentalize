@@ -9,6 +9,24 @@ class TestPacienteArea:
     """Testes abrangentes para a área do paciente"""
     
     @pytest.fixture
+    def app(self):
+        """Configurar aplicação para testes"""
+        app = create_app('testing')
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        app.config['WTF_CSRF_ENABLED'] = False
+        
+        with app.app_context():
+            db.create_all()
+            yield app
+            db.drop_all()
+    
+    @pytest.fixture
+    def client(self, app):
+        """Cliente de teste"""
+        return app.test_client()
+    
+    @pytest.fixture
     def paciente_user(self, app):
         """Fixture para criar um usuário paciente"""
         with app.app_context():

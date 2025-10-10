@@ -2,6 +2,24 @@ import pytest
 from app import create_app, db
 from app.models import Usuario
 
+@pytest.fixture
+def app():
+    """Cria uma instância da aplicação para testes."""
+    app = create_app('testing')
+    app.config['TESTING'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    app.config['WTF_CSRF_ENABLED'] = False
+    
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.drop_all()
+
+@pytest.fixture
+def client(app):
+    """Cliente de teste para fazer requisições."""
+    return app.test_client()
+
 class TestHomepage:
     """Testes para a página inicial."""
     
