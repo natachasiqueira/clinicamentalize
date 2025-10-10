@@ -28,7 +28,7 @@ def init_database_if_needed():
                 admin_email = 'admin@clinicamentalize.com.br'
                 
                 try:
-                    admin_user = Usuario.query.filter_by(email=admin_email).first()
+                    admin_user = Usuario.query.filter_by(email=admin_email, tipo_usuario='admin').first()
                 except Exception:
                     # Se der erro na query, assume que não existe
                     admin_user = None
@@ -44,8 +44,9 @@ def init_database_if_needed():
                         tipo_usuario='admin',
                         email=admin_email,
                         telefone='(11) 96331-3561',
-                        senha_hash=generate_password_hash(default_password)
+                        ativo=True
                     )
+                    new_admin.set_senha(default_password)
                     
                     db.session.add(new_admin)
                     db.session.commit()
@@ -53,8 +54,23 @@ def init_database_if_needed():
                     print("✓ Usuário administrador criado com sucesso!")
                     print(f"  Email: {admin_email}")
                     print(f"  Senha: {default_password}")
+                    print(f"  Tipo: admin")
+                    print(f"  Ativo: True")
+                    
+                    # Verificação adicional
+                    created_admin = Usuario.query.filter_by(email=admin_email, tipo_usuario='admin').first()
+                    if created_admin:
+                        print("✓ Verificação: Admin criado e encontrado no banco!")
+                        print(f"  ID: {created_admin.id}")
+                        print(f"  Hash da senha: {created_admin.senha_hash[:20]}...")
+                    else:
+                        print("❌ Erro: Admin não foi encontrado após criação!")
                 else:
                     print("✓ Usuário administrador já existe")
+                    print(f"  ID: {admin_user.id}")
+                    print(f"  Email: {admin_user.email}")
+                    print(f"  Tipo: {admin_user.tipo_usuario}")
+                    print(f"  Ativo: {admin_user.ativo}")
                     
             except Exception as init_error:
                 print(f"❌ Erro ao inicializar banco: {init_error}")
