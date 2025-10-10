@@ -11,6 +11,11 @@ if os.getenv('FLASK_CONFIG') == 'production':
     # Garantir que a aplicação use a porta correta no Render
     port = int(os.environ.get('PORT', 10000))
     print(f"🚀 Aplicação configurada para porta: {port}")
+    print(f"🌐 Binding para: 0.0.0.0:{port}")
+    
+    # Configurar o Flask para fazer bind correto
+    app.config['SERVER_NAME'] = None  # Remove server name restrictions
+    app.config['APPLICATION_ROOT'] = '/'
 
 def init_database_if_needed():
     """Inicializa o banco de dados se necessário"""
@@ -87,5 +92,6 @@ if os.getenv('FLASK_CONFIG') == 'production':
     init_database_if_needed()
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get('PORT', 10000))  # Usar 10000 como padrão do Render
+    print(f"🚀 Iniciando aplicação em 0.0.0.0:{port}")
+    app.run(host='0.0.0.0', port=port, debug=False)

@@ -9,7 +9,7 @@ services:
     env: python
     pythonVersion: 3.11.x
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "gunicorn --bind 0.0.0.0:10000 wsgi:app"
+    startCommand: "gunicorn --bind 0.0.0.0:10000 --workers 1 --timeout 120 --log-level info wsgi:app"
     envVars:
       - key: FLASK_CONFIG
         value: production
