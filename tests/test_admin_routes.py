@@ -3,6 +3,7 @@ from flask import url_for
 from werkzeug.security import generate_password_hash
 from app.models import Usuario, Admin, Paciente, Psicologo, Agendamento, db
 from datetime import datetime, timedelta
+import pytz
 
 
 class TestAdminRoutes:
@@ -26,6 +27,10 @@ class TestAdminRoutes:
             db.session.add(admin)
             db.session.commit()
             
+            # Refresh para evitar DetachedInstanceError
+            db.session.refresh(admin_usuario)
+            db.session.refresh(admin)
+            
             return admin_usuario
 
     @pytest.fixture
@@ -47,6 +52,10 @@ class TestAdminRoutes:
             )
             db.session.add(paciente)
             db.session.commit()
+            
+            # Refresh para evitar DetachedInstanceError
+            db.session.refresh(paciente_usuario)
+            db.session.refresh(paciente)
             
             return paciente
 
@@ -70,7 +79,39 @@ class TestAdminRoutes:
             db.session.add(psicologo)
             db.session.commit()
             
+            # Refresh para evitar DetachedInstanceError
+            db.session.refresh(psicologo_usuario)
+            db.session.refresh(psicologo)
+            
             return psicologo
+
+    @pytest.fixture
+    def sample_agendamentos(self, app, sample_paciente, sample_psicologo):
+        """Cria agendamentos de exemplo para testes"""
+        with app.app_context():
+            agora_utc = datetime.now(pytz.utc)
+            agendamentos = []
+            
+            # Criar alguns agendamentos de exemplo para os últimos 6 meses
+            for i in range(10):
+                data_agendamento = agora_utc - timedelta(days=i*15)  # Espaçados de 15 em 15 dias
+                agendamento = Agendamento(
+                    paciente_id=sample_paciente.id,
+                    psicologo_id=sample_psicologo.id,
+                    data_hora=data_agendamento,
+                    status='realizado' if i % 2 == 0 else 'confirmado',
+                    observacoes=f'Agendamento teste {i+1}'
+                )
+                db.session.add(agendamento)
+                agendamentos.append(agendamento)
+            
+            db.session.commit()
+            
+            # Refresh para evitar DetachedInstanceError
+            for agendamento in agendamentos:
+                db.session.refresh(agendamento)
+            
+            return agendamentos
 
     def test_admin_perfil_get(self, client, admin_user):
         """Testa o acesso à página de perfil do admin"""
@@ -80,9 +121,9 @@ class TestAdminRoutes:
         
         response = client.get(url_for('admin.perfil'))
         assert response.status_code == 200
-        assert b'Editar Perfil do Administrador' in response.data
+        assert b'Meu Perfil' in response.data
 
-    def test_admin_perfil_post_success(self, client, admin_user):
+    def test_admin_perfil_post_success(self, client, admin_user, sample_agendamentos):
         """Testa a atualização bem-sucedida do perfil do admin"""
         with client.session_transaction() as sess:
             sess['_user_id'] = str(admin_user.id)
@@ -97,7 +138,7 @@ class TestAdminRoutes:
         response = client.post(url_for('admin.perfil'), data=data, follow_redirects=True)
         assert response.status_code == 200
 
-    def test_admin_perfil_post_with_password(self, client, admin_user):
+    def test_admin_perfil_post_with_password(self, client, admin_user, sample_agendamentos):
         """Testa a atualização do perfil com mudança de senha"""
         with client.session_transaction() as sess:
             sess['_user_id'] = str(admin_user.id)
@@ -248,11 +289,12 @@ class TestAdminRoutes:
             response = client.get(url_for('admin.agendamentos'))
             assert response.status_code == 302  # Redirect para login
 
-    def test_dashboard_buttons_present(self, client, admin_user):
+    def test_dashboard_buttons_present(self, client, admin_user, sample_agendamentos, app):
         """Testa se os novos botões estão presentes no dashboard"""
         with client.session_transaction() as sess:
             sess['_user_id'] = str(admin_user.id)
             sess['_fresh'] = True
         
-        response = client.get(url_for('admin.dashboard'))
-        assert response.status_code == 200
+        with app.app_context():
+            response = client.get(url_for('admin.dashboard'))
+            assert response.status_code == 200

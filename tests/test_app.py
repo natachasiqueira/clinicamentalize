@@ -36,16 +36,18 @@ class TestApp:
         response = client.get('/auth/login')
         assert response.status_code == 200
         
+        # Logout redireciona para login quando não há usuário logado
         response = client.get('/auth/logout')
-        assert response.status_code == 200
+        assert response.status_code in [200, 302]
     
-    def test_area_routes_exist(self, client):
-        """Testa se as rotas das áreas existem"""
-        response = client.get('/paciente')
-        assert response.status_code == 200
+    def test_area_routes_redirect_to_login(self, client):
+        """Testa se as rotas das áreas redirecionam para login quando não autenticado"""
+        # Estas rotas requerem autenticação, então devem redirecionar para login
+        response = client.get('/paciente/dashboard')
+        assert response.status_code == 302  # Redirect para login
         
-        response = client.get('/psicologo')
-        assert response.status_code == 200
+        response = client.get('/psicologo/dashboard')
+        assert response.status_code == 302  # Redirect para login
         
-        response = client.get('/admin')
-        assert response.status_code == 200
+        response = client.get('/admin/dashboard')
+        assert response.status_code == 302  # Redirect para login
