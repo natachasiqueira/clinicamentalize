@@ -20,8 +20,6 @@ def admin_required(f):
 def init_routes(admin):
     """Inicializa as rotas do admin"""
     
-
-    
     @admin.route('/dashboard')
     @login_required
     @admin_required

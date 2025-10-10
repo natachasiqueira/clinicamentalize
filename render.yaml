@@ -16,6 +16,10 @@ services:
         generateValue: true
       - key: DEFAULT_ADMIN_PASSWORD
         generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: clinica-mentalize-db
+          property: connectionString
 
 databases:
   - name: clinica-mentalize-db
