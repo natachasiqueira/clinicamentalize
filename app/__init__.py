@@ -17,6 +17,15 @@ def create_app(config_name='default'):
     # Configuração da aplicação
     app.config.from_object(config[config_name])
     
+    # Configuração específica para Render
+    if config_name == 'production':
+        # Garantir que a aplicação aceite conexões de qualquer IP
+        app.config['SERVER_NAME'] = None
+        # Configurar porta do Render
+        import os
+        port = int(os.environ.get('PORT', 10000))
+        print(f"🌐 Flask configurado para produção na porta: {port}")
+    
     # Inicialização das extensões
     db.init_app(app)
     login_manager.init_app(app)

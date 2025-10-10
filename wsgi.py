@@ -6,6 +6,12 @@ from werkzeug.security import generate_password_hash
 # Criar a instância da aplicação para o Gunicorn
 app = create_app(os.getenv('FLASK_CONFIG') or 'production')
 
+# Configurar porta para Render
+if os.getenv('FLASK_CONFIG') == 'production':
+    # Garantir que a aplicação use a porta correta no Render
+    port = int(os.environ.get('PORT', 10000))
+    print(f"🚀 Aplicação configurada para porta: {port}")
+
 def init_database_if_needed():
     """Inicializa o banco de dados se necessário"""
     with app.app_context():
