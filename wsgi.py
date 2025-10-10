@@ -15,6 +15,10 @@ def init_database_if_needed():
             print("✓ Banco de dados já inicializado")
         except Exception as e:
             print("⚠️ Banco de dados não inicializado. Criando tabelas...")
+            
+            # Rollback da transação atual em caso de erro
+            db.session.rollback()
+            
             try:
                 # Cria todas as tabelas
                 db.create_all()
@@ -22,7 +26,12 @@ def init_database_if_needed():
                 
                 # Verifica se já existe um usuário admin
                 admin_email = 'admin@clinicamentalize.com.br'
-                admin_user = Usuario.query.filter_by(email=admin_email).first()
+                
+                try:
+                    admin_user = Usuario.query.filter_by(email=admin_email).first()
+                except Exception:
+                    # Se der erro na query, assume que não existe
+                    admin_user = None
                 
                 if not admin_user:
                     print("Criando usuário administrador padrão...")
@@ -49,6 +58,7 @@ def init_database_if_needed():
                     
             except Exception as init_error:
                 print(f"❌ Erro ao inicializar banco: {init_error}")
+                db.session.rollback()
 
 # Inicializar banco se necessário (apenas em produção)
 if os.getenv('FLASK_CONFIG') == 'production':
