@@ -23,13 +23,13 @@
                         <i class="fas fa-filter"></i> {{ mes_nome }} de {{ ano }}
                     </h6>
                     <div class="d-flex gap-2">
-                        <a href="{{ url_for('psicologo.calendario', mes=mes_anterior, ano=ano_anterior) }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ url_for('psicologo.calendario', mes=mes_anterior, ano=ano_anterior) }}" class="btn btn-light btn-sm border">
                             <i class="fas fa-chevron-left"></i> Mês Anterior
                         </a>
-                        <a href="{{ url_for('psicologo.calendario') }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ url_for('psicologo.calendario') }}" class="btn btn-light btn-sm border">
                             Mês Atual
                         </a>
-                        <a href="{{ url_for('psicologo.calendario', mes=mes_proximo, ano=ano_proximo) }}" class="btn btn-outline-primary btn-sm">
+                        <a href="{{ url_for('psicologo.calendario', mes=mes_proximo, ano=ano_proximo) }}" class="btn btn-light btn-sm border">
                             Próximo Mês <i class="fas fa-chevron-right"></i>
                         </a>
                     </div>
