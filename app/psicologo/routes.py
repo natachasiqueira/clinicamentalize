@@ -49,10 +49,11 @@ def dashboard():
         extract('year', Agendamento.data_hora) == ano_atual
     ).count()
     
-    # Próximas consultas (próximos 7 dias)
+    # Próximas consultas (próximos 7 dias) - excluindo canceladas
     proximas_consultas = Agendamento.query.filter_by(psicologo_id=psicologo.id).filter(
         Agendamento.data_hora >= datetime.now(),
-        func.date(Agendamento.data_hora) <= (datetime.now() + timedelta(days=7))
+        func.date(Agendamento.data_hora) <= (datetime.now() + timedelta(days=7)),
+        Agendamento.status != 'cancelado'
     ).order_by(Agendamento.data_hora).limit(5).all()
     
     # Consultas de hoje detalhadas
@@ -199,8 +200,8 @@ def calendario():
         Agendamento.data_hora <= datetime.combine(ultimo_dia, datetime.max.time())
     ).order_by(Agendamento.data_hora).all()
     
-    # Separar agendamentos futuros e passados (excluindo cancelados)
-    agendamentos_futuros = [ag for ag in agendamentos_mes if ag.data_hora.date() >= hoje and ag.status != 'cancelado']
+    # Separar agendamentos futuros e passados
+    agendamentos_futuros = [ag for ag in agendamentos_mes if ag.data_hora.date() >= hoje]
     agendamentos_passados = [ag for ag in agendamentos_mes if ag.data_hora.date() < hoje]
     
     # Calcular mês anterior e próximo
