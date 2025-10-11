@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1><i class="fas fa-laptop-medical"></i> Página Principal do Paciente</h1>
+                <h1><i class="fas fa-laptop-medical" aria-hidden="true"></i> Página Principal do Paciente</h1>
             <p class="text-muted mb-0">Bem-vindo, {{ current_user.nome_completo }}!</p>
             </div>
         </div>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar-check fa-2x text-gray-300"></i>
+                            <i class="fas fa-calendar-check fa-2x text-gray-300" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -80,8 +80,9 @@
                         <div class="col-lg-4 col-md-6 mb-4">
                             <button type="button" class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center" 
                                     data-bs-toggle="modal" data-bs-target="#modalAgendamento" 
+                                    aria-label="Agendar nova consulta"
                                     style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
-                                <i class="fas fa-plus-circle fa-3x mb-3" style="color: white;"></i>
+                                <i class="fas fa-plus-circle fa-3x mb-3" style="color: white;" aria-hidden="true"></i>
                                 <h5 class="mb-2 text-white font-weight-bold">Agendar Consulta</h5>
                                 <p class="text-center text-white-50 mb-0 small">Marque suas consultas online de forma rápida e fácil</p>
                             </button>
@@ -89,8 +90,9 @@
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="{{ url_for('paciente.agendamentos') }}" 
                                class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center text-decoration-none" 
+                               aria-label="Ver minhas consultas agendadas"
                                style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
-                                <i class="fas fa-calendar-alt fa-3x mb-3" style="color: white;"></i>
+                                <i class="fas fa-calendar-alt fa-3x mb-3" style="color: white;" aria-hidden="true"></i>
                                 <h5 class="mb-2 text-white font-weight-bold">Minhas Consultas</h5>
                                 <p class="text-center text-white-50 mb-0 small">Visualize seu histórico e próximas consultas</p>
                             </a>
@@ -98,8 +100,9 @@
                         <div class="col-lg-4 col-md-6 mb-4">
                             <a href="{{ url_for('paciente.perfil') }}" 
                                class="btn btn-primary w-100 py-4 px-4 h-100 d-flex flex-column justify-content-center align-items-center text-decoration-none" 
+                               aria-label="Gerenciar meus dados pessoais"
                                style="min-height: 180px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;">
-                                <i class="fas fa-user-cog fa-3x mb-3" style="color: white;"></i>
+                                <i class="fas fa-user-cog fa-3x mb-3" style="color: white;" aria-hidden="true"></i>
                                 <h5 class="mb-2 text-white font-weight-bold">Meus Dados</h5>
                                 <p class="text-center text-white-50 mb-0 small">Gerencie seus dados pessoais e configurações</p>
                             </a>

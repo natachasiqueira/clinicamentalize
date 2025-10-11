@@ -11,6 +11,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Skip Links para Acessibilidade */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+            font-weight: bold;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+        
+        /* Melhorar indicadores de foco para acessibilidade */
+        a:focus, button:focus, input:focus, select:focus, textarea:focus {
+            outline: 3px solid #005fcc !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 3px rgba(0, 95, 204, 0.3) !important;
+        }
+        
         /* Paleta Atualizada - Azul Escuro e Azul Petróleo */
         :root {
             --primary-color: #1B3A4B;          /* Azul Escuro (novo) */
@@ -257,26 +282,31 @@
     </style>
 </head>
 <body>
+    <!-- Skip Links para Acessibilidade -->
+    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+    <a href="#navigation" class="skip-link">Pular para a navegação</a>
+    
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="navigation" role="navigation" aria-label="Navegação principal">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                <span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;">ψ</span> Mentalize
+            <a class="navbar-brand" href="{{ url_for('main.index') }}" aria-label="Clínica Mentalize - Página inicial">
+                <span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;" aria-hidden="true">ψ</span> Mentalize
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alternar navegação">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="collapse navbar-collapse" id="navbarNav">                <ul class="navbar-nav me-auto">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.index') }}">
-                            <i class="fas fa-home"></i> Início
+                        <a class="nav-link" href="{{ url_for('main.index') }}" aria-label="Ir para página inicial">
+                            <i class="fas fa-home" aria-hidden="true"></i> Início
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('main.contato') }}">
-                            <i class="fas fa-envelope"></i> Contato
+                        <a class="nav-link" href="{{ url_for('main.contato') }}" aria-label="Ir para página de contato">
+                            <i class="fas fa-envelope" aria-hidden="true"></i> Contato
                         </a>
                     </li>
                 </ul>
@@ -284,24 +314,24 @@
                 <ul class="navbar-nav">
                     {% if current_user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> {{ current_user.nome_completo }}
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu do usuário {{ current_user.nome_completo }}">
+                                <i class="fas fa-user" aria-hidden="true"></i> {{ current_user.nome_completo }}
                             </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
-                                    <i class="fas fa-sign-out-alt"></i> Sair
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}" aria-label="Sair do sistema">
+                                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair
                                 </a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.login') }}">
-                                <i class="fas fa-sign-in-alt"></i> Login
+                            <a class="nav-link" href="{{ url_for('auth.login') }}" aria-label="Fazer login no sistema">
+                                <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('auth.registro_paciente') }}">
-                                <i class="fas fa-user-plus"></i> Cadastro
+                            <a class="nav-link" href="{{ url_for('auth.registro_paciente') }}" aria-label="Cadastrar-se como paciente">
+                                <i class="fas fa-user-plus" aria-hidden="true"></i> Cadastro
                             </a>
                         </li>
                     {% endif %}
@@ -313,40 +343,43 @@
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="container mt-3">
+            <section class="container mt-3" role="alert" aria-label="Mensagens do sistema">
                 {% for category, message in messages %}
                     <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
                         {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar mensagem"></button>
                     </div>
                 {% endfor %}
-            </div>
+            </section>
         {% endif %}
     {% endwith %}
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content" role="main" aria-label="Conteúdo principal">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-auto">
+    <footer class="footer mt-auto" role="contentinfo" aria-label="Informações da clínica">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h5><span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;">ψ</span> Clínica Mentalize</h5>
+                    <h5><span style="font-weight: 300; font-size: 1.3em; font-family: 'Times New Roman', serif;" aria-hidden="true">ψ</span> Clínica Mentalize</h5>
                     <p class="text-muted">Cuidando da sua saúde mental com excelência.</p>
                 </div>
                 <div class="col-md-6">
                     <h6>Contato</h6>
                     <p class="text-muted mb-1">
-                        <i class="fas fa-envelope"></i> contato@clinicamentalize.com.br
+                        <i class="fas fa-envelope" aria-hidden="true"></i> 
+                        <a href="mailto:contato@clinicamentalize.com.br" class="text-muted" aria-label="Enviar email para contato@clinicamentalize.com.br">contato@clinicamentalize.com.br</a>
                     </p>
                     <p class="text-muted mb-1">
-                        <i class="fas fa-phone"></i> (11) 96331-3561
+                        <i class="fas fa-phone" aria-hidden="true"></i> 
+                        <a href="tel:+5511963313561" class="text-muted" aria-label="Ligar para (11) 96331-3561">(11) 96331-3561</a>
                     </p>
                     <p class="text-muted">
-                        <i class="fas fa-map-marker-alt"></i> R. Progresso, 735 - Francisco Morato - SP
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i> 
+                        <span aria-label="Endereço: Rua Progresso, 735 - Francisco Morato - SP">R. Progresso, 735 - Francisco Morato - SP</span>
                     </p>
                 </div>
             </div>
