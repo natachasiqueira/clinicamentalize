@@ -6,7 +6,7 @@
 <style>
 .hero-section {
     background-color: var(--primary-color);
-    min-height: calc(100vh);
+    min-height: 100vh;
     align-items: center;
     color: white;
     padding: 120px 0;
@@ -39,6 +39,10 @@
     }
     50% {
         transform: translateY(-20px);
+    }
+    .float-icon {
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
     }
 }
 
@@ -152,7 +156,8 @@
             </div>
             <div class="col-lg-6 text-center">
                 <div class="hero-icon">
-                    <span class="display-1 opacity-75" style="font-size: 12rem; font-weight: 300; font-family: 'Times New Roman', serif;">ψ</span>
+                    <span class="display-1 opacity-75 float-icon"
+                        style="font-size: 12rem; font-weight: 300; font-family: 'Times New Roman', serif;">ψ</span>
                 </div>
             </div>
         </div>
