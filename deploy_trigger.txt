@@ -1,0 +1,14 @@
+Deploy trigger - Add debug logs to identify loading issue
+Timestamp: 2025-10-11 01:30:00
+
+Changes made:
+1. Added detailed debug logs in app.py and app/__init__.py
+2. Logs will help identify where the application is hanging during startup
+3. This should help diagnose the infinite loading issue on Render
+
+Debug logs added:
+- Application creation process
+- Extension initialization
+- Blueprint registration
+- Model imports
+- Filter configuration

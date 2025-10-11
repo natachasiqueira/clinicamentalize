@@ -3,7 +3,9 @@ from app import create_app, db
 from app.models import Usuario, Psicologo, Paciente, Agendamento, Prontuario, Sessao, HorarioAtendimento
 
 # Criação da aplicação
+print("🚀 RENDER: Iniciando criação da aplicação...")
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+print("✅ RENDER: Aplicação criada com sucesso!")
 
 @app.shell_context_processor
 def make_shell_context():
