@@ -3,6 +3,42 @@
 {% block title %}Clínica Mentalize - Cuidando da sua Saúde Mental{% endblock %}
 
 {% block head %}
+
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-section text-white py-5">
+    <div class="container">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6">
+                <h1 class="display-3 fw-bold mb-4">Clínica Mentalize</h1>
+                <p class="lead mb-4">Cuidando da sua saúde mental com tecnologia e humanização. Sistema completo de gestão clínica para psicólogos e pacientes.</p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    {% if not current_user.is_authenticated %}
+                    <a href="{{ url_for('auth.registro_paciente') }}" class="btn btn-light btn-lg px-4">
+                        <i class="fas fa-user-plus me-2"></i>Cadastre-se Gratuitamente
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-sign-in-alt me-2"></i>Fazer Login
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('main.dashboard_redirect') }}" class="btn btn-light btn-lg px-4">
+                        <i class="fas fa-tachometer-alt me-2"></i>Acessar Minha Área
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="hero-icon float-icon">
+                    <span class="display-1 opacity-75" style="font-size: 12rem; font-weight: 300; font-family: 'Times New Roman', serif;">ψ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 <style>
 .hero-section {
     background-color: var(--primary-color);
@@ -130,37 +166,3 @@
     }
 }
 </style>
-{% endblock %}
-
-{% block content %}
-<!-- Hero Section -->
-<div class="hero-section text-white py-5">
-    <div class="container">
-        <div class="row align-items-center min-vh-75">
-            <div class="col-lg-6">
-                <h1 class="display-3 fw-bold mb-4">Clínica Mentalize</h1>
-                <p class="lead mb-4">Cuidando da sua saúde mental com tecnologia e humanização. Sistema completo de gestão clínica para psicólogos e pacientes.</p>
-                <div class="d-flex flex-column flex-sm-row gap-3">
-                    {% if not current_user.is_authenticated %}
-                    <a href="{{ url_for('auth.registro_paciente') }}" class="btn btn-light btn-lg px-4">
-                        <i class="fas fa-user-plus me-2"></i>Cadastre-se Gratuitamente
-                    </a>
-                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-light btn-lg px-4">
-                        <i class="fas fa-sign-in-alt me-2"></i>Fazer Login
-                    </a>
-                    {% else %}
-                    <a href="{{ url_for('main.dashboard_redirect') }}" class="btn btn-light btn-lg px-4">
-                        <i class="fas fa-tachometer-alt me-2"></i>Acessar Minha Área
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="col-lg-6 text-center">
-                <div class="hero-icon float-icon">
-                    <span class="display-1 opacity-75" style="font-size: 12rem; font-weight: 300; font-family: 'Times New Roman', serif;">ψ</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
