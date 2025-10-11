@@ -108,30 +108,32 @@ def initialize_default_users():
     except Exception as e:
         print(f"Erro na inicialização automática: {e}")
 
-# Chama a inicialização na primeira execução
-with app.app_context():
-    db.create_all()
-    # Garante que o usuário admin seja criado se não existir
-    from app.models import Usuario
-    from werkzeug.security import generate_password_hash
-    
-    admin_email = 'admin@clinicamentalize.com.br'
-    admin_user = Usuario.query.filter_by(email=admin_email).first()
-    
-    if not admin_user:
-        print("Criando usuário administrador padrão...")
-        new_admin = Usuario(
-            nome_completo='Administrativo',
-            tipo_usuario='admin',
-            email=admin_email,
-            telefone='(11) 96331-3561',
-            senha_hash=generate_password_hash(os.getenv('DEFAULT_ADMIN_PASSWORD', 'admin123'))
-        )
-        db.session.add(new_admin)
-        db.session.commit()
-        print("Usuário administrador padrão criado com sucesso!")
-    else:
-        print("Usuário administrador já existe.")
+# Chama a inicialização na primeira execução APENAS em desenvolvimento
+# Em produção, o init_db.py cuida da inicialização
+if os.getenv('FLASK_CONFIG') != 'production':
+    with app.app_context():
+        db.create_all()
+        # Garante que o usuário admin seja criado se não existir
+        from app.models import Usuario
+        from werkzeug.security import generate_password_hash
+        
+        admin_email = 'admin@clinicamentalize.com.br'
+        admin_user = Usuario.query.filter_by(email=admin_email).first()
+        
+        if not admin_user:
+            print("Criando usuário administrador padrão...")
+            new_admin = Usuario(
+                nome_completo='Administrativo',
+                tipo_usuario='admin',
+                email=admin_email,
+                telefone='(11) 96331-3561',
+                senha_hash=generate_password_hash(os.getenv('DEFAULT_ADMIN_PASSWORD', 'admin123'))
+            )
+            db.session.add(new_admin)
+            db.session.commit()
+            print("Usuário administrador padrão criado com sucesso!")
+        else:
+            print("Usuário administrador já existe.")
 
 if __name__ == '__main__':
     # Em produção, o gunicorn será usado ao invés do servidor de desenvolvimento

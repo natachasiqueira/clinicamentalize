@@ -85,9 +85,11 @@ def check_database_connection():
     
     with app.app_context():
         try:
-            # Tenta uma query simples
-            result = db.engine.execute('SELECT 1')
-            result.close()
+            # Tenta uma query simples usando SQLAlchemy 2.0+ syntax
+            from sqlalchemy import text
+            with db.engine.connect() as connection:
+                result = connection.execute(text('SELECT 1'))
+                result.close()
             print("✅ Conexão com banco de dados OK")
             return True
         except Exception as e:
