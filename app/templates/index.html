@@ -135,13 +135,22 @@
 
 {% block content %}
 <!-- Hero Section -->
-<div class="hero-section text-white py-5">
+<div class="hero-section text-white py-5" style="background-color: #1B3A4B !important; min-height: calc(100vh + 8cm) !important; display: flex !important; align-items: center !important; color: white !important; padding: 120px 0 !important;">
     <div class="container">
-        <div class="row align-items-center min-vh-75">
-            <div class="col-lg-6">
-                <h1 class="display-3 fw-bold mb-4">Clínica Mentalize</h1>
-                <p class="lead mb-4">Cuidando da sua saúde mental com tecnologia e humanização. Sistema completo de gestão clínica para psicólogos e pacientes.</p>
-                <div class="d-flex flex-column flex-sm-row gap-3">
+        <div class="row justify-content-center" style="min-height: calc(100vh + 6cm) !important;">
+            <div class="col-12 text-center">
+                <!-- Título centralizado -->
+                <h1 class="display-3 fw-bold mb-5" style="margin-bottom: 3rem !important;">Clínica Mentalize</h1>
+                
+                <!-- Símbolo ψ centralizado -->
+                <div class="mb-5" style="margin-bottom: 3rem !important;">
+                    <div style="display: inline-block !important; animation: floatPsi 3s ease-in-out infinite !important;">
+                        <span style="font-size: 12rem !important; font-weight: 300 !important; font-family: 'Times New Roman', serif !important; animation: floatPsi 3s ease-in-out infinite !important; display: inline-block !important; opacity: 0.75 !important;">ψ</span>
+                    </div>
+                </div>
+                
+                <!-- Botões centralizados -->
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
                     {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.registro_paciente') }}" class="btn btn-light btn-lg px-4">
                         <i class="fas fa-user-plus me-2"></i>Cadastre-se Gratuitamente
@@ -156,12 +165,18 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="col-lg-6 text-center">
-                <div class="hero-icon float-icon">
-                    <span class="display-1 opacity-75" style="font-size: 12rem !important; font-weight: 300 !important; font-family: 'Times New Roman', serif !important; animation: float 3s ease-in-out infinite !important;">ψ</span>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+
+<style>
+@keyframes floatPsi {
+    0%, 100% {
+        transform: translateY(0px) !important;
+    }
+    50% {
+        transform: translateY(-30px) !important;
+    }
+}
+</style>
 {% endblock %}
