@@ -9,7 +9,8 @@
         <div class="row align-items-center min-vh-75">
             <div class="col-lg-6">
                 <h1 class="display-3 fw-bold mb-4">Clínica Mentalize</h1>
-                <p class="lead mb-4">Cuidando da sua saúde mental com tecnologia e humanização. Sistema completo de gestão clínica para psicólogos e pacientes.</p>
+                <p></p>
+                <p></p>
                 <div class="d-flex flex-column flex-sm-row gap-3">
                     {% if not current_user.is_authenticated %}
                     <a href="{{ url_for('auth.registro_paciente') }}" class="btn btn-light btn-lg px-4">
@@ -37,7 +38,7 @@
 <style>
 .hero-section {
     background-color: var(--primary-color);
-    min-height: 100vh;
+    min-height: 90vh;
     display: flex;
     align-items: center;
     color: white;
