@@ -6,7 +6,7 @@
 <style>
 .hero-section {
     background-color: var(--primary-color) !important;
-    min-height: calc(100vh + 8cm) !important;
+    min-height: 100vh !important;
     display: flex !important;
     align-items: center !important;
     color: white !important;
@@ -19,7 +19,7 @@
 }
 
 .min-vh-75 {
-    min-height: calc(100vh + 6cm) !important;
+    min-height: 100vh !important;
 }
 
 .fa-10x {
@@ -28,6 +28,63 @@
 
 .fa-8x {
     font-size: 8em;
+}
+
+/* Animação do símbolo ψ */
+@keyframes floatPsi {
+    0%, 100% {
+        transform: translateY(0px) !important;
+        -webkit-transform: translateY(0px) !important;
+        -moz-transform: translateY(0px) !important;
+        -o-transform: translateY(0px) !important;
+    }
+    50% {
+        transform: translateY(-30px) !important;
+        -webkit-transform: translateY(-30px) !important;
+        -moz-transform: translateY(-30px) !important;
+        -o-transform: translateY(-30px) !important;
+    }
+}
+
+@-webkit-keyframes floatPsi {
+    0%, 100% {
+        -webkit-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -webkit-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+@-moz-keyframes floatPsi {
+    0%, 100% {
+        -moz-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -moz-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+@-o-keyframes floatPsi {
+    0%, 100% {
+        -o-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -o-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+/* Força a animação com especificidade máxima */
+#psi-container, #psi-symbol {
+    animation: floatPsi 3s ease-in-out infinite !important;
+    -webkit-animation: floatPsi 3s ease-in-out infinite !important;
+    -moz-animation: floatPsi 3s ease-in-out infinite !important;
+    -o-animation: floatPsi 3s ease-in-out infinite !important;
 }
 
 .hero-icon {
@@ -144,8 +201,8 @@
                 
                 <!-- Símbolo ψ centralizado -->
                 <div class="mb-5" style="margin-bottom: 3rem !important;">
-                    <div style="display: inline-block !important; animation: floatPsi 3s ease-in-out infinite !important;">
-                        <span style="font-size: 12rem !important; font-weight: 300 !important; font-family: 'Times New Roman', serif !important; animation: floatPsi 3s ease-in-out infinite !important; display: inline-block !important; opacity: 0.75 !important;">ψ</span>
+                    <div id="psi-container" style="display: inline-block !important; animation: floatPsi 3s ease-in-out infinite !important; -webkit-animation: floatPsi 3s ease-in-out infinite !important; -moz-animation: floatPsi 3s ease-in-out infinite !important; -o-animation: floatPsi 3s ease-in-out infinite !important;">
+                        <span id="psi-symbol" style="font-size: 12rem !important; font-weight: 300 !important; font-family: 'Times New Roman', serif !important; animation: floatPsi 3s ease-in-out infinite !important; -webkit-animation: floatPsi 3s ease-in-out infinite !important; -moz-animation: floatPsi 3s ease-in-out infinite !important; -o-animation: floatPsi 3s ease-in-out infinite !important; display: inline-block !important; opacity: 0.75 !important; transform: translateY(0px) !important; transition: transform 0.1s ease !important;">ψ</span>
                     </div>
                 </div>
                 
@@ -173,10 +230,109 @@
 @keyframes floatPsi {
     0%, 100% {
         transform: translateY(0px) !important;
+        -webkit-transform: translateY(0px) !important;
+        -moz-transform: translateY(0px) !important;
+        -o-transform: translateY(0px) !important;
     }
     50% {
         transform: translateY(-30px) !important;
+        -webkit-transform: translateY(-30px) !important;
+        -moz-transform: translateY(-30px) !important;
+        -o-transform: translateY(-30px) !important;
     }
 }
-</style>
+
+@-webkit-keyframes floatPsi {
+    0%, 100% {
+        -webkit-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -webkit-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+@-moz-keyframes floatPsi {
+    0%, 100% {
+        -moz-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -moz-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+@-o-keyframes floatPsi {
+    0%, 100% {
+        -o-transform: translateY(0px) !important;
+        transform: translateY(0px) !important;
+    }
+    50% {
+        -o-transform: translateY(-30px) !important;
+        transform: translateY(-30px) !important;
+    }
+}
+
+/* Força a animação com especificidade máxima */
+#psi-container, #psi-symbol {
+    animation: floatPsi 3s ease-in-out infinite !important;
+    -webkit-animation: floatPsi 3s ease-in-out infinite !important;
+    -moz-animation: floatPsi 3s ease-in-out infinite !important;
+    -o-animation: floatPsi 3s ease-in-out infinite !important;
+}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// JavaScript fallback para forçar a animação
+document.addEventListener('DOMContentLoaded', function() {
+    const psiSymbol = document.getElementById('psi-symbol');
+    const psiContainer = document.getElementById('psi-container');
+    
+    if (psiSymbol && psiContainer) {
+        // Força a aplicação da animação via JavaScript
+        function forceAnimation() {
+            psiSymbol.style.animation = 'floatPsi 3s ease-in-out infinite';
+            psiSymbol.style.webkitAnimation = 'floatPsi 3s ease-in-out infinite';
+            psiSymbol.style.mozAnimation = 'floatPsi 3s ease-in-out infinite';
+            psiSymbol.style.oAnimation = 'floatPsi 3s ease-in-out infinite';
+            
+            psiContainer.style.animation = 'floatPsi 3s ease-in-out infinite';
+            psiContainer.style.webkitAnimation = 'floatPsi 3s ease-in-out infinite';
+            psiContainer.style.mozAnimation = 'floatPsi 3s ease-in-out infinite';
+            psiContainer.style.oAnimation = 'floatPsi 3s ease-in-out infinite';
+        }
+        
+        // Aplica imediatamente
+        forceAnimation();
+        
+        // Reaplica após um pequeno delay para garantir
+        setTimeout(forceAnimation, 100);
+        setTimeout(forceAnimation, 500);
+        
+        // Animação manual como fallback absoluto
+        let direction = 1;
+        let position = 0;
+        
+        function manualAnimation() {
+            position += direction * 0.5;
+            if (position >= 30) direction = -1;
+            if (position <= 0) direction = 1;
+            
+            psiSymbol.style.transform = `translateY(-${position}px)`;
+            psiContainer.style.transform = `translateY(-${position}px)`;
+        }
+        
+        // Se a animação CSS não funcionar, usa animação manual
+        setTimeout(() => {
+            const computedStyle = window.getComputedStyle(psiSymbol);
+            if (computedStyle.animationName === 'none') {
+                setInterval(manualAnimation, 50);
+            }
+        }, 1000);
+    }
+});
+</script>
 {% endblock %}
