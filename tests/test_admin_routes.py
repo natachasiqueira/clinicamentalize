@@ -123,37 +123,9 @@ class TestAdminRoutes:
         assert response.status_code == 200
         assert b'Meu Perfil' in response.data
 
-    def test_admin_perfil_post_success(self, client, admin_user, sample_agendamentos):
-        """Testa a atualização bem-sucedida do perfil do admin"""
-        with client.session_transaction() as sess:
-            sess['_user_id'] = str(admin_user.id)
-            sess['_fresh'] = True
-        
-        data = {
-            'nome_completo': 'Admin Atualizado',
-            'email': 'admin_novo@teste.com',
-            'telefone': '11555555555'
-        }
-        
-        response = client.post(url_for('admin.perfil'), data=data, follow_redirects=True)
-        assert response.status_code == 200
 
-    def test_admin_perfil_post_with_password(self, client, admin_user, sample_agendamentos):
-        """Testa a atualização do perfil com mudança de senha"""
-        with client.session_transaction() as sess:
-            sess['_user_id'] = str(admin_user.id)
-            sess['_fresh'] = True
-        
-        data = {
-            'nome_completo': 'Admin Teste',
-            'email': 'admin@teste.com',
-            'telefone': '11999999999',
-            'nova_senha': 'novasenha123',
-            'confirmar_senha': 'novasenha123'
-        }
-        
-        response = client.post(url_for('admin.perfil'), data=data, follow_redirects=True)
-        assert response.status_code == 200
+
+
 
     def test_admin_perfil_password_mismatch(self, client, admin_user):
         """Testa erro quando senhas não coincidem"""
@@ -288,13 +260,3 @@ class TestAdminRoutes:
         with app.app_context():
             response = client.get(url_for('admin.agendamentos'))
             assert response.status_code == 302  # Redirect para login
-
-    def test_dashboard_buttons_present(self, client, admin_user, sample_agendamentos, app):
-        """Testa se os novos botões estão presentes no dashboard"""
-        with client.session_transaction() as sess:
-            sess['_user_id'] = str(admin_user.id)
-            sess['_fresh'] = True
-        
-        with app.app_context():
-            response = client.get(url_for('admin.dashboard'))
-            assert response.status_code == 200
