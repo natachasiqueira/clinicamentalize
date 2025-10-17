@@ -77,36 +77,39 @@ def init_routes(admin):
             mes = mes_item.mes
             
             # Total de pacientes únicos no mês
-            total_pacientes = db.session.query(
-                func.count(func.distinct(Agendamento.paciente_id))
-            ).filter(
-                func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
-                Agendamento.status.in_(['realizado', 'confirmado'])
-            ).scalar() or 0
-            
-            # Pacientes que tiveram mais de 1 sessão no mês
-            pacientes_multiplas_sessoes = db.session.query(
-                Agendamento.paciente_id
-            ).filter(
-                func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
-                Agendamento.status.in_(['realizado', 'confirmado'])
-            ).group_by(
-                Agendamento.paciente_id
-            ).having(
-                func.count(Agendamento.id) >= 2
-            ).count()
-            
-            if total_pacientes > 0:
-                taxa = (pacientes_multiplas_sessoes / total_pacientes) * 100
-                taxa_retencao.append({
-                    'mes': mes,
-                    'taxa': round(taxa, 1)
-                })
-            else:
-                taxa_retencao.append({
-                    'mes': mes,
-                    'taxa': 0
-                })
+            -            total_pacientes = db.session.query(
+            +            total_pacientes_mes = db.session.query(
+                             func.count(func.distinct(Agendamento.paciente_id))
+                         ).filter(
+                             func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
+                             Agendamento.status.in_(['realizado', 'confirmado'])
+                         ).scalar() or 0
+                         
+                         # Pacientes que tiveram mais de 1 sessão no mês
+                         pacientes_multiplas_sessoes = db.session.query(
+                             Agendamento.paciente_id
+                         ).filter(
+                             func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
+                             Agendamento.status.in_(['realizado', 'confirmado'])
+                         ).group_by(
+                             Agendamento.paciente_id
+                         ).having(
+                             func.count(Agendamento.id) >= 2
+                         ).count()
+                         
+            -            if total_pacientes > 0:
+            -                taxa = (pacientes_multiplas_sessoes / total_pacientes) * 100
+            +            if total_pacientes_mes > 0:
+            +                taxa = (pacientes_multiplas_sessoes / total_pacientes_mes) * 100
+                             taxa_retencao.append({
+                                 'mes': mes,
+                                 'taxa': round(taxa, 1)
+                             })
+                         else:
+                             taxa_retencao.append({
+                                 'mes': mes,
+                                 'taxa': 0
+                             })
         
         # 2. Frequência de Sessões (distribuição)
         frequencia_query = db.session.query(
@@ -446,3 +449,63 @@ def init_routes(admin):
                                  'data_inicio': data_inicio,
                                  'data_fim': data_fim
                               })
+    
+    @admin.route('/db-info')
+    @login_required
+    @admin_required
+    def db_info():
+        """Informações de diagnóstico do banco de dados (mascara credenciais)"""
+        from flask import current_app
+        import os
+    
+        # Obter URI configurada na aplicação e mascarar credenciais
+        uri = current_app.config.get('SQLALCHEMY_DATABASE_URI')
+        masked_uri = None
+        if uri:
+            try:
+                if '://' in uri and '@' in uri:
+                    scheme, rest = uri.split('://', 1)
+                    creds, hostpart = rest.split('@', 1)
+                    masked_uri = f"{scheme}://***:***@{hostpart}"
+                else:
+                    masked_uri = uri
+            except Exception:
+                masked_uri = 'unavailable'
+    
+        # Checar variável de ambiente DATABASE_URL e mascarar
+        env_has_dburl = 'DATABASE_URL' in os.environ
+        env_db = os.environ.get('DATABASE_URL')
+        masked_env_db = None
+        if env_db:
+            try:
+                if '://' in env_db and '@' in env_db:
+                    scheme, rest = env_db.split('://', 1)
+                    creds, hostpart = rest.split('@', 1)
+                    masked_env_db = f"{scheme}://***:***@{hostpart}"
+                else:
+                    masked_env_db = env_db
+            except Exception:
+                masked_env_db = 'unavailable'
+    
+        # Contagens básicas
+        usuarios_total = db.session.query(Usuario).count()
+        usuarios_pacientes = db.session.query(Usuario).filter(Usuario.tipo_usuario == 'paciente').count()
+        pacientes_total = db.session.query(Paciente).count()
+        pacientes_join_usuario = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).count()
+    
+        # Amostra de pacientes (id, nome, email)
+        amostra = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id)\
+            .with_entities(Paciente.id, Usuario.nome_completo, Usuario.email).limit(10).all()
+    
+        return jsonify({
+            'app_SQLALCHEMY_DATABASE_URI': masked_uri,
+            'env_DATABASE_URL_present': env_has_dburl,
+            'env_DATABASE_URL': masked_env_db,
+            'usuarios_total': usuarios_total,
+            'usuarios_pacientes': usuarios_pacientes,
+            'pacientes_total': pacientes_total,
+            'pacientes_join_usuario': pacientes_join_usuario,
+            'pacientes_amostra': [
+                {'id': p[0], 'nome': p[1], 'email': p[2]} for p in amostra
+            ]
+        })

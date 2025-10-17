@@ -99,7 +99,7 @@
                                         <td>{{ usuario.data_criacao.strftime('%d/%m/%Y') if usuario.data_criacao else 'Não informado' }}</td>
                                         <td>
                                             {% if paciente.agendamentos.count() == 0 %}
-                                                Sem agendamentos.
+                                                Sem agendamentos
                                             {% elif paciente.psicologo_responsavel %}
                                                 {{ paciente.psicologo_responsavel.usuario.nome_completo }}
                                             {% else %}
