@@ -77,39 +77,36 @@ def init_routes(admin):
             mes = mes_item.mes
             
             # Total de pacientes únicos no mês
-            -            total_pacientes = db.session.query(
-            +            total_pacientes_mes = db.session.query(
-                             func.count(func.distinct(Agendamento.paciente_id))
-                         ).filter(
-                             func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
-                             Agendamento.status.in_(['realizado', 'confirmado'])
-                         ).scalar() or 0
-                         
-                         # Pacientes que tiveram mais de 1 sessão no mês
-                         pacientes_multiplas_sessoes = db.session.query(
-                             Agendamento.paciente_id
-                         ).filter(
-                             func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
-                             Agendamento.status.in_(['realizado', 'confirmado'])
-                         ).group_by(
-                             Agendamento.paciente_id
-                         ).having(
-                             func.count(Agendamento.id) >= 2
-                         ).count()
-                         
-            -            if total_pacientes > 0:
-            -                taxa = (pacientes_multiplas_sessoes / total_pacientes) * 100
-            +            if total_pacientes_mes > 0:
-            +                taxa = (pacientes_multiplas_sessoes / total_pacientes_mes) * 100
-                             taxa_retencao.append({
-                                 'mes': mes,
-                                 'taxa': round(taxa, 1)
-                             })
-                         else:
-                             taxa_retencao.append({
-                                 'mes': mes,
-                                 'taxa': 0
-                             })
+            total_pacientes_mes = db.session.query(
+                func.count(func.distinct(Agendamento.paciente_id))
+            ).filter(
+                func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
+                Agendamento.status.in_(['realizado', 'confirmado'])
+            ).scalar() or 0
+            
+            # Pacientes que tiveram mais de 1 sessão no mês
+            pacientes_multiplas_sessoes = db.session.query(
+                Agendamento.paciente_id
+            ).filter(
+                func.to_char(Agendamento.data_hora, 'YYYY-MM') == mes,
+                Agendamento.status.in_(['realizado', 'confirmado'])
+            ).group_by(
+                Agendamento.paciente_id
+            ).having(
+                func.count(Agendamento.id) >= 2
+            ).count()
+            
+            if total_pacientes_mes > 0:
+                taxa = (pacientes_multiplas_sessoes / total_pacientes_mes) * 100
+                taxa_retencao.append({
+                    'mes': mes,
+                    'taxa': round(taxa, 1)
+                })
+            else:
+                taxa_retencao.append({
+                    'mes': mes,
+                    'taxa': 0
+                })
         
         # 2. Frequência de Sessões (distribuição)
         frequencia_query = db.session.query(
