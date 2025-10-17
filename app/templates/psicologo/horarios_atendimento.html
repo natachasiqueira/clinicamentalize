@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Validar se pelo menos um período foi preenchido
             if (!inicioManha && !inicioTarde) {
-                alert('Por favor, configure pelo menos um período (manhã ou tarde) para ' + 
+                alert('Por favor, configure pelo menos uma entrada e uma saída para ' + 
                       checkbox.nextElementSibling.textContent);
                 hasError = true;
                 return;
@@ -259,12 +259,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validar horários da manhã
             if (inicioManha && fimManha) {
                 if (inicioManha >= fimManha) {
-                    alert('O horário de início da manhã deve ser anterior ao horário de fim.');
+                    alert('O horário de início do 1° Turno deve ser anterior ao horário do fim.');
                     hasError = true;
                     return;
                 }
             } else if (inicioManha || fimManha) {
-                alert('Preencha tanto o início quanto o fim do período da manhã.');
+                alert('Preencha tanto o início quanto o fim do 1° Turno.');
                 hasError = true;
                 return;
             }
@@ -272,12 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validar horários da tarde
             if (inicioTarde && fimTarde) {
                 if (inicioTarde >= fimTarde) {
-                    alert('O horário de início da tarde deve ser anterior ao horário de fim.');
+                    alert('O horário de início do 2° Turno deve ser anterior ao horário de fim.');
                     hasError = true;
                     return;
                 }
             } else if (inicioTarde || fimTarde) {
-                alert('Preencha tanto o início quanto o fim do período da tarde.');
+                alert('Preencha tanto o início quanto o fim do 2° Turno.');
                 hasError = true;
                 return;
             }
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Validar sobreposição entre manhã e tarde
             if (inicioManha && fimManha && inicioTarde && fimTarde) {
                 if (fimManha > inicioTarde) {
-                    alert('O horário da manhã não pode sobrepor com o horário da tarde.');
+                    alert('O horário do 1° Turno não pode sobrepor com o horário do 2° Turno.');
                     hasError = true;
                     return;
                 }
