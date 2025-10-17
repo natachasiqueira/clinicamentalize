@@ -335,7 +335,7 @@ def prontuarios():
             paciente_id=paciente.id,
             psicologo_id=psicologo.id
         ).filter(
-            Agendamento.data_hora <= datetime.now(timezone.utc)
+            Agendamento.data_hora <= datetime.utcnow()
         ).order_by(Agendamento.data_hora.desc()).first()
 
         # Total de Sessões - contar consultas com status "Realizado"
@@ -351,10 +351,10 @@ def prontuarios():
             paciente_id=paciente.id,
             psicologo_id=psicologo.id
         ).filter(
-            Agendamento.data_hora > datetime.now(timezone.utc)
+            Agendamento.data_hora > datetime.utcnow()
         ).first()
 
-        if agendamento_futuro or (ultima_consulta and (datetime.now(timezone.utc) - ultima_consulta.data_hora).days <= 90):
+        if agendamento_futuro or (ultima_consulta and (datetime.utcnow() - ultima_consulta.data_hora).days <= 90):
             status = "Ativo"
             pacientes_ativos += 1
         else:

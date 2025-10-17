@@ -87,7 +87,6 @@
                                         <th><i class="fas fa-envelope"></i> E-mail</th>
                                         <th><i class="fas fa-phone"></i> Telefone</th>
                                         <th><i class="fas fa-clock"></i> Data de Cadastro</th>
-                                        <!-- Nova coluna: Psicólogo Responsável -->
                                         <th><i class="fas fa-user-md"></i> Psicólogo</th>
                                     </tr>
                                 </thead>
@@ -98,7 +97,6 @@
                                         <td>{{ usuario.email }}</td>
                                         <td>{{ usuario.telefone or 'Não informado' }}</td>
                                         <td>{{ usuario.data_criacao.strftime('%d/%m/%Y') if usuario.data_criacao else 'Não informado' }}</td>
-                                        <!-- Valor da nova coluna: nome do psicólogo ou mensagem padrão -->
                                         <td>{{ paciente.psicologo_responsavel.usuario.nome_completo if paciente.psicologo_responsavel else 'Sem agendamentos.' }}</td>
                                     </tr>
                                     {% endfor %}
