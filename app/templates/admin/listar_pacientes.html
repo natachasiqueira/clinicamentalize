@@ -97,7 +97,16 @@
                                         <td>{{ usuario.email }}</td>
                                         <td>{{ usuario.telefone or 'Não informado' }}</td>
                                         <td>{{ usuario.data_criacao.strftime('%d/%m/%Y') if usuario.data_criacao else 'Não informado' }}</td>
-                                        <td>{{ paciente.psicologo_responsavel.usuario.nome_completo if paciente.psicologo_responsavel else 'Sem agendamentos.' }}</td>
+-                                        <td>{{ paciente.psicologo_responsavel.usuario.nome_completo if paciente.psicologo_responsavel else 'Sem agendamentos.' }}</td>
++                                        <td>
++                                            {% if paciente.agendamentos.count() == 0 %}
++                                                Sem agendamentos.
++                                            {% elif paciente.psicologo_responsavel %}
++                                                {{ paciente.psicologo_responsavel.usuario.nome_completo }}
++                                            {% else %}
++                                                {{ paciente.agendamentos.first().psicologo.usuario.nome_completo }}
++                                            {% endif %}
++                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
