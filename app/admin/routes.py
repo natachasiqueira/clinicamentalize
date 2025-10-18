@@ -26,7 +26,7 @@ def init_routes(admin):
     def dashboard():
         """Dashboard administrativo"""
         # Estatísticas básicas
-        total_pacientes = db.session.query(Paciente).join(Usuario, Paciente.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'paciente').count()
+        total_pacientes = db.session.query(Usuario).filter(Usuario.tipo_usuario == 'paciente').count()
         total_psicologos = db.session.query(Psicologo).join(Usuario, Psicologo.usuario_id == Usuario.id).filter(Usuario.tipo_usuario == 'psicologo').count()
         total_agendamentos = db.session.query(Agendamento).count()
         
@@ -446,6 +446,34 @@ def init_routes(admin):
                                  'data_inicio': data_inicio,
                                  'data_fim': data_fim
                               })
+    
+    @admin.route('/db-info-public', methods=['GET'])
+    def db_info_public():
+        """Endpoint público de diagnóstico: retorna contagens básicas para ajudar a identificar por que o dashboard mostra 0."""
+        try:
+            usuarios_total = db.session.query(Usuario).count()
+            usuarios_pacientes_total = db.session.query(Usuario).filter(Usuario.tipo_usuario == 'paciente').count()
+            pacientes_total = db.session.query(Paciente).count()
+            psicologos_total = db.session.query(Psicologo).count()
+            agendamentos_total = db.session.query(Agendamento).count()
+    
+            # Amostra de pacientes (id e email) para validar se há registros vinculados a usuários
+            sample_rows = db.session.query(Paciente.id, Usuario.email).join(Usuario, Paciente.usuario_id == Usuario.id).limit(5).all()
+            pacientes_sample = []
+            for row in sample_rows:
+                pid, email = row
+                pacientes_sample.append({"id": pid, "email": email})
+    
+            return jsonify({
+                "usuarios_total": usuarios_total,
+                "usuarios_pacientes_total": usuarios_pacientes_total,
+                "pacientes_total": pacientes_total,
+                "psicologos_total": psicologos_total,
+                "agendamentos_total": agendamentos_total,
+                "pacientes_sample": pacientes_sample
+            }), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     @admin.route('/db-info')
     @login_required
