@@ -33,6 +33,12 @@ def init_database():
             except Exception as query_error:
                 # Se der erro na query, provavelmente as tabelas não existem
                 print(f"ℹ️ Tabelas não existem ainda: {query_error}")
+                # Garantir que qualquer transação abortada seja limpa antes de prosseguir
+                try:
+                    db.session.rollback()
+                    print("🔄 Rollback da sessão após erro de consulta inicial")
+                except Exception as rb_err:
+                    print(f"⚠️ Erro ao executar rollback: {rb_err}")
             
             # Criar todas as tabelas
             print("📋 Criando tabelas...")

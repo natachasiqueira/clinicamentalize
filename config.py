@@ -7,6 +7,14 @@ class Config:
     """Configuração base da aplicação"""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'chave-desenvolvimento-nao-usar-em-producao'
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///clinica_mentalize.db'
+    # Normalizar URI do PostgreSQL caso venha com prefixo antigo
+    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
+    # Opções de engine para conexões mais estáveis (útil em ambientes cloud)
+    SQLALCHEMY_ENGINE_OPTIONS = {
+        'pool_pre_ping': True,    # verifica conexão antes de usar
+        'pool_recycle': 300       # recicla conexões após 5 minutos
+    }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'jwt-chave-desenvolvimento'
     JWT_ACCESS_TOKEN_EXPIRES = 3600  # 1 hora    # Configurações da clínica
